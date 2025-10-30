@@ -2,31 +2,42 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor.U2D;
 using UnityEngine;
 
 namespace ChainPattern
 {
     public abstract class Chain
     {
+        enum ChainState
+        {
+            Ready,
+            Started,
+            Skipped,
+            Completed,
+        }
+
         TaskCompletionSource<bool> currentTcs;
-        bool isStarted;
-        bool isCompleted;
+        ChainState chainState;
         Action onComplete;
+
+        public Chain()
+        {
+            chainState = ChainState.Ready;
+        }
 
         /// <summary>
         /// Chainの実行を開始
         /// </summary>
         public Task Start()
         {
-            if (isStarted)
+            if (chainState != ChainState.Ready)
             {                
-                Debug.Log("Chain already started");
+                Debug.Log("Chain alrestarted");
                 return Task.FromResult(true);
-            }
-
-            isStarted = true;
-            isCompleted = false;
+            }           
             currentTcs = new TaskCompletionSource<bool>();
+            chainState = ChainState.Started;
             StartInternal();
             return currentTcs.Task;
         }
@@ -36,13 +47,14 @@ namespace ChainPattern
         /// </summary>
         public void Skip()
         {
-            if (!isStarted || isCompleted)
+            if (chainState != ChainState.Started)
             {
                 return;
             }
             onComplete = null; // スキップ時は完了コールバックを呼ばない
+            chainState = ChainState.Skipped;
             SkipInternal();
-            Complete();
+            currentTcs?.TrySetResult(true);
         }
 
         /// <summary>
@@ -58,13 +70,14 @@ namespace ChainPattern
         /// </summary>
         protected void Complete()
         {
-            if (isCompleted)
+            if (chainState != ChainState.Started)
             {
                 return;
             }
-            isCompleted = true;
+            chainState = ChainState.Completed;
             currentTcs?.TrySetResult(true);
             onComplete?.Invoke();
+            onComplete = null;
         }
 
         /// <summary>
