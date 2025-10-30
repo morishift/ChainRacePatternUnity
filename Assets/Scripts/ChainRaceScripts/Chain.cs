@@ -9,7 +9,7 @@ namespace ChainPattern
 {
     public abstract class Chain
     {
-        enum ChainState
+        enum State
         {
             Ready,
             Started,
@@ -18,12 +18,12 @@ namespace ChainPattern
         }
 
         TaskCompletionSource<bool> currentTcs;
-        ChainState chainState;
+        State state;
         Action onComplete;
 
         public Chain()
         {
-            chainState = ChainState.Ready;
+            state = State.Ready;
         }
 
         /// <summary>
@@ -31,13 +31,13 @@ namespace ChainPattern
         /// </summary>
         public Task Start()
         {
-            if (chainState != ChainState.Ready)
+            if (state != State.Ready)
             {                
                 Debug.Log("Chain alrestarted");
                 return Task.FromResult(true);
             }           
             currentTcs = new TaskCompletionSource<bool>();
-            chainState = ChainState.Started;
+            state = State.Started;
             StartInternal();
             return currentTcs.Task;
         }
@@ -47,12 +47,12 @@ namespace ChainPattern
         /// </summary>
         public void Skip()
         {
-            if (chainState != ChainState.Started)
+            if (state != State.Started)
             {
                 return;
             }
             onComplete = null; // スキップ時は完了コールバックを呼ばない
-            chainState = ChainState.Skipped;
+            state = State.Skipped;
             SkipInternal();
             currentTcs?.TrySetResult(true);
         }
@@ -70,11 +70,11 @@ namespace ChainPattern
         /// </summary>
         protected void Complete()
         {
-            if (chainState != ChainState.Started)
+            if (state != State.Started)
             {
                 return;
             }
-            chainState = ChainState.Completed;
+            state = State.Completed;
             currentTcs?.TrySetResult(true);
             onComplete?.Invoke();
             onComplete = null;
