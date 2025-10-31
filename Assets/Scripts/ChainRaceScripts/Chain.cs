@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace ChainPattern
 {
+    /// <summary>
+    /// Chainクラスの基底クラス
+    /// </summary>
     public abstract class Chain
     {
         enum State
@@ -18,7 +21,7 @@ namespace ChainPattern
         }
 
         TaskCompletionSource<bool> currentTcs;
-        State state;
+        State state;        
         Action onComplete;
 
         public Chain()
@@ -51,9 +54,9 @@ namespace ChainPattern
             {
                 return;
             }
-            onComplete = null; // スキップ時は完了コールバックを呼ばない
             state = State.Skipped;
-            SkipInternal();
+            onComplete = null; // スキップ時は完了コールバックを呼ばない
+            SkipInternal();            
             currentTcs?.TrySetResult(true);
         }
 
@@ -66,6 +69,14 @@ namespace ChainPattern
         }
 
         /// <summary>
+        /// スタート直後にSkipされるかどうかを設定
+        /// </summary>
+        public void SetIsWillSkip(bool willskip)
+        {
+            isWillSkip = willskip;
+        }
+
+        /// <summary>
         /// Chainを完了状態にする。派生クラスから呼ぶ
         /// </summary>
         protected void Complete()
@@ -74,10 +85,19 @@ namespace ChainPattern
             {
                 return;
             }
-            state = State.Completed;
+            state = State.Completed;            
             currentTcs?.TrySetResult(true);
             onComplete?.Invoke();
             onComplete = null;
+        }
+
+        /// <summary>
+        /// Start直後にSkipされるかどうか
+        /// </summary>
+        protected bool isWillSkip
+        {
+            get;
+            private set;
         }
 
         /// <summary>
