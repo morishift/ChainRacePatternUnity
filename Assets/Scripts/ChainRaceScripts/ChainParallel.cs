@@ -25,8 +25,7 @@ namespace ChainPattern
 
         /// <summary>
         /// ’Ç‰Á
-        /// </summary>
-        /// <param name="chain"></param>
+        /// </summary>        
         public void Add(Chain chain)
         {
             if (!enableFlg)
