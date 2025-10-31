@@ -11,48 +11,31 @@ namespace ChainPattern
     {
         List<Chain> chainList = new List<Chain>();
         Chain currentChain;
+        bool enableFlg;        
 
         public ChainSequence(params Chain[] chains)
         {
+            enableFlg = true;
             chainList.AddRange(chains);
         }
 
         /// <summary>
         /// 追加
-        /// </summary>
-        /// <param name="chain"></param>
-        public void AddChain(Chain chain)
+        /// </summary>        
+        public void Add(Chain chain)
         {
-            chainList.Add(chain);
+            if (enableFlg)
+            {
+                chainList.Add(chain);
+            }
         }
 
         /// <summary>
         /// 開始
         /// </summary>
         protected override void StartInternal()
-        {           
+        { 
             NextChain();
-        }
-
-        /// <summary>
-        /// 次のChainを実行
-        /// </summary>
-        private void NextChain()
-        {
-            if (chainList.Count <= 0)
-            {
-                Complete();
-                return;
-            }
-            currentChain = chainList[0];
-            chainList.RemoveAt(0);
-            currentChain.SetIsWillSkip(isWillSkip);
-            currentChain.SetCompleteCallback(() =>
-            {
-                currentChain = null;
-                NextChain();
-            });
-            currentChain.Start();
         }
 
         /// <summary>
@@ -65,6 +48,7 @@ namespace ChainPattern
             while (chainList.Count > 0)
             {
                 Chain c = chainList[0];
+                chainList.RemoveAt(0);
                 bool end = false;
                 c.SetCompleteCallback(() => end = true);
                 c.SetIsWillSkip(true);
@@ -74,6 +58,29 @@ namespace ChainPattern
                     c.Skip();
                 }
             }
+            enableFlg = false;
+        }
+
+        /// <summary>
+        /// 次のChainを実行
+        /// </summary>
+        private void NextChain()
+        {
+            if (chainList.Count <= 0)
+            {
+                enableFlg = false;
+                Complete();
+                return;
+            }
+            currentChain = chainList[0];
+            chainList.RemoveAt(0);
+            currentChain.SetIsWillSkip(isWillSkip);
+            currentChain.SetCompleteCallback(() =>
+            {
+                currentChain = null;
+                NextChain();
+            });
+            currentChain.Start();
         }
     }
 }

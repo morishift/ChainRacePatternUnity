@@ -6,9 +6,9 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// Chain‚Ì•À—ñÀs
+    /// Chain‚Ì‹£‘ˆ
     /// </summary>
-    public class ChainParallel : Chain
+    public class ChainRace : Chain
     {
         List<Chain> chainList = new List<Chain>();
         List<Chain> startedChainList = new List<Chain>();
@@ -17,7 +17,7 @@ namespace ChainPattern
         bool startedFlg;
         bool consumeFlg;
 
-        public ChainParallel(params Chain[] chains)
+        public ChainRace(params Chain[] chains)
         {
             enableFlg = true;
             chainList.AddRange(chains);
@@ -93,14 +93,13 @@ namespace ChainPattern
             if (startedChainList.Contains(chain))
             {
                 startedChainList.Remove(chain);
-                if (chainList.Count <= 0 && startedChainList.Count <= 0)
-                {
-                    enableFlg = false;
-                    startingFlg = false;
-                    startedFlg = false;
-                    consumeFlg = false;
-                    Complete();
-                }
+                consumeFlg = true;
+                ConsumeStartedChainListAndChainList();
+                enableFlg = false;
+                startingFlg = false;
+                startedFlg = false;
+                consumeFlg = false;
+                Complete();
             }
         }
 
