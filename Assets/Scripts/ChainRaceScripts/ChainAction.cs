@@ -7,7 +7,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// ˆê‚Â‚ÌŠÖ”‚ğÀs‚·‚éChain
+    /// ä¸€ã¤ã®é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹Chain
     /// </summary>
     public class ChainAction : Chain
     {
@@ -18,7 +18,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ŠÖ”‚ğw’è‚µ‚½Chain
+        /// é–¢æ•°ã‚’æŒ‡å®šã—ãŸChain
         /// </summary>        
         public ChainAction(Action a)
         {
@@ -26,7 +26,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// isWillSkip‚ğˆø”‚Éæ‚éŠÖ”‚ğÀs‚·‚éChain
+        /// isWillSkipã‚’å¼•æ•°ã«å–ã‚‹é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹Chain
         /// </summary>        
         public ChainAction(Action<bool> action)
         { 
@@ -34,7 +34,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ŠÖ”w’è
+        /// é–¢æ•°æŒ‡å®š
         /// </summary>
         public void SetAction(Action a)
         {
@@ -42,7 +42,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ŠJn
+        /// é–‹å§‹
         /// </summary>
         protected override void StartInternal()
         {
@@ -52,7 +52,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ƒXƒLƒbƒv
+        /// ã‚¹ã‚­ãƒƒãƒ—æ™‚
         /// </summary>
         protected override void SkipInternal()
         {            

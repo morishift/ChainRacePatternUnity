@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// ˆê’èŠÔ‘Ò‹@‚·‚éChain
+    /// ä¸€å®šæ™‚é–“å¾…æ©Ÿã™ã‚‹Chain
     /// </summary>
     public class ChainDelay : Chain
     {
@@ -14,7 +14,7 @@ namespace ChainPattern
         CancellationTokenSource cts;
 
         /// <summary>
-        /// •bw’è
+        /// ç§’æŒ‡å®š
         /// </summary>
         public ChainDelay(float seconds)
         {
@@ -22,7 +22,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ŠJn
+        /// é–‹å§‹
         /// </summary>
         protected override void StartInternal()
         {
@@ -30,7 +30,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ƒXƒLƒbƒv
+        /// ã‚¹ã‚­ãƒƒãƒ—
         /// </summary>
         protected override void SkipInternal()
         {
@@ -38,7 +38,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ’x‰„ˆ—
+        /// é…å»¶å‡¦ç†
         /// </summary>
         private async Task DelayAsync()
         {
@@ -46,7 +46,7 @@ namespace ChainPattern
             {
                 if (isWillSkip)
                 {
-                    // ’¼Œã‚ÉSkip‚·‚éê‡‚Í‚È‚É‚à‚µ‚È‚¢
+                    // ç›´å¾Œã«Skipã™ã‚‹å ´åˆã¯ãªã«ã‚‚ã—ãªã„
                     return;
                 }
                 cts = new CancellationTokenSource();
@@ -55,7 +55,7 @@ namespace ChainPattern
             }
             catch (OperationCanceledException)
             {
-                // Skip ‚³‚ê‚½ (³í)
+                // Skip ã•ã‚ŒãŸ (æ­£å¸¸)
             }
             catch (Exception ex)
             {

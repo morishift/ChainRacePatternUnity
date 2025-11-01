@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// Chain‚Ì‹£‘ˆ
+    /// Chainã®ç«¶äº‰
     /// </summary>
     public class ChainRace : Chain
     {
@@ -24,13 +24,13 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ’Ç‰Á
+        /// è¿½åŠ 
         /// </summary>
-        public void Add(Chain chain)
+        public ChainRace Add(Chain chain)
         {
             if (!enableFlg)
             {
-                // –³‹‚·‚é
+                // ç„¡è¦–ã™ã‚‹
             }
             else if (startingFlg || consumeFlg)
             {
@@ -47,10 +47,11 @@ namespace ChainPattern
             {
                 chainList.Add(chain);
             }
+            return this;
         }
 
         /// <summary>
-        /// ŠJn
+        /// é–‹å§‹
         /// </summary>
         protected override void StartInternal()
         {
@@ -72,7 +73,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ƒXƒLƒbƒv
+        /// ã‚¹ã‚­ãƒƒãƒ—
         /// </summary>
         protected override void SkipInternal()
         {
@@ -85,7 +86,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Chain‚ÌŠ®—¹ƒR[ƒ‹ƒoƒbƒN
+        /// Chainã®å®Œäº†ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
         /// </summary>        
         private void OnChainComplete(Chain chain)
         {
@@ -103,7 +104,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ŠJnÏ‚İChain‚Æ–¢ŠJnChain‚ÌÁ‰»
+        /// é–‹å§‹æ¸ˆã¿Chainã¨æœªé–‹å§‹Chainã®æ¶ˆåŒ–
         /// </summary>
         private void ConsumeStartedChainListAndChainList()
         {

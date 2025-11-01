@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace ChainPattern
 {
     /// <summary>
-    /// ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚çI—¹‚·‚éChain
+    /// ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã‚‰çµ‚äº†ã™ã‚‹Chain
     /// </summary>
     public class ChainButton : Chain
     {
@@ -20,7 +20,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ŠJn
+        /// é–‹å§‹
         /// </summary>
         protected override void StartInternal()
         {
@@ -29,11 +29,12 @@ namespace ChainPattern
                 Complete();
                 return;
             }
+            targetButton.interactable = true;
             targetButton.onClick.AddListener(OnClickButton);
         }
 
         /// <summary>
-        /// ƒXƒLƒbƒv
+        /// ã‚¹ã‚­ãƒƒãƒ—æ™‚
         /// </summary>
         protected override void SkipInternal()
         {
@@ -41,10 +42,11 @@ namespace ChainPattern
             {
                 targetButton.onClick.RemoveListener(OnClickButton);
             }
+            targetButton.interactable = false;
         }
 
         /// <summary>
-        /// ƒ{ƒ^ƒ“‚ğƒNƒŠƒbƒN‚µ‚½
+        /// ãƒœã‚¿ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ãŸ
         /// </summary>
         private void OnClickButton()
         {
@@ -52,6 +54,7 @@ namespace ChainPattern
             {
                 targetButton.onClick.RemoveListener(OnClickButton);
             }
+            targetButton.interactable = false;
             Complete();
         }
     }

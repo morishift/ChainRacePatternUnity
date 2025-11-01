@@ -8,7 +8,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// ChainƒNƒ‰ƒX‚ÌŠî’êƒNƒ‰ƒX
+    /// Chainã‚¯ãƒ©ã‚¹ã®åŸºåº•ã‚¯ãƒ©ã‚¹
     /// </summary>
     public abstract class Chain
     {
@@ -30,7 +30,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Chain‚ÌÀs‚ğŠJn
+        /// Chainã®å®Ÿè¡Œã‚’é–‹å§‹
         /// </summary>
         public Task Start()
         {
@@ -38,7 +38,7 @@ namespace ChainPattern
             {                
                 Debug.Log("Chain alrestarted");
                 return Task.FromResult(true);
-            }           
+            }
             currentTcs = new TaskCompletionSource<bool>();
             state = State.Started;
             StartInternal();
@@ -46,7 +46,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Chain‚ğƒXƒLƒbƒv‚µ‚Ä‘¦À‚ÉŠ®—¹
+        /// Chainã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¦å³åº§ã«å®Œäº†
         /// </summary>
         public void Skip()
         {
@@ -55,13 +55,13 @@ namespace ChainPattern
                 return;
             }
             state = State.Skipped;
-            onComplete = null; // ƒXƒLƒbƒv‚ÍŠ®—¹ƒR[ƒ‹ƒoƒbƒN‚ğŒÄ‚Î‚È‚¢
+            onComplete = null; // ã‚¹ã‚­ãƒƒãƒ—æ™‚ã¯å®Œäº†ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’å‘¼ã°ãªã„
             SkipInternal();            
             currentTcs?.TrySetResult(true);
         }
 
         /// <summary>
-        /// Š®—¹ƒR[ƒ‹ƒoƒbƒN‚ğİ’è
+        /// å®Œäº†ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’è¨­å®š
         /// </summary>
         public void SetCompleteCallback(Action callback)
         {
@@ -69,7 +69,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ƒXƒ^[ƒg’¼Œã‚ÉSkip‚³‚ê‚é‚©‚Ç‚¤‚©‚ğİ’è
+        /// ã‚¹ã‚¿ãƒ¼ãƒˆç›´å¾Œã«Skipã•ã‚Œã‚‹ã‹ã©ã†ã‹ã‚’è¨­å®š
         /// </summary>
         public void SetIsWillSkip(bool willskip)
         {
@@ -77,7 +77,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Chain‚ğŠ®—¹ó‘Ô‚É‚·‚éB”h¶ƒNƒ‰ƒX‚©‚çŒÄ‚Ô
+        /// Chainã‚’å®Œäº†çŠ¶æ…‹ã«ã™ã‚‹ã€‚æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‹ã‚‰å‘¼ã¶
         /// </summary>
         protected void Complete()
         {
@@ -92,7 +92,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Start’¼Œã‚ÉSkip‚³‚ê‚é‚©‚Ç‚¤‚©
+        /// Startç›´å¾Œã«Skipã•ã‚Œã‚‹ã‹ã©ã†ã‹
         /// </summary>
         protected bool isWillSkip
         {
@@ -101,12 +101,12 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ÀÛ‚ÌŠJnˆ—B”h¶ƒNƒ‰ƒX‚ÅÀ‘•
+        /// å®Ÿéš›ã®é–‹å§‹å‡¦ç†ã€‚æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…
         /// </summary>
         protected abstract void StartInternal();
 
         /// <summary>
-        /// ÀÛ‚ÌƒXƒLƒbƒvˆ—B”h¶ƒNƒ‰ƒX‚ÅÀ‘•
+        /// å®Ÿéš›ã®ã‚¹ã‚­ãƒƒãƒ—å‡¦ç†ã€‚æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…
         /// </summary>
         protected abstract void SkipInternal();
     }

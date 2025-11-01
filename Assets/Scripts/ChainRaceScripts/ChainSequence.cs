@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// Chain‚Ì‡ŸÀs
+    /// Chainã®é †æ¬¡å®Ÿè¡Œ
     /// </summary>
     public class ChainSequence : Chain
     {
@@ -20,18 +20,19 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ’Ç‰Á
+        /// è¿½åŠ 
         /// </summary>        
-        public void Add(Chain chain)
+        public ChainSequence Add(Chain chain)
         {
             if (enableFlg)
             {
                 chainList.Add(chain);
             }
+            return this;
         }
 
         /// <summary>
-        /// ŠJn
+        /// é–‹å§‹
         /// </summary>
         protected override void StartInternal()
         { 
@@ -39,7 +40,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ƒXƒLƒbƒv
+        /// ã‚¹ã‚­ãƒƒãƒ—
         /// </summary>
         protected override void SkipInternal()
         {
@@ -62,7 +63,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Ÿ‚ÌChain‚ğÀs
+        /// æ¬¡ã®Chainã‚’å®Ÿè¡Œ
         /// </summary>
         private void NextChain()
         {
