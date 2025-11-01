@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEditor.U2D;
 using UnityEngine;
 
 namespace ChainPattern
@@ -35,8 +34,7 @@ namespace ChainPattern
         public Task Start()
         {
             if (state != State.Ready)
-            {                
-                Debug.Log("Chain alrestarted");
+            {                                
                 return Task.FromResult(true);
             }
             currentTcs = new TaskCompletionSource<bool>();

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ChainPattern;
-using UnityEditor;
-using UnityEditor.Rendering;
-using Unity.VisualScripting;
 
 public class SampleScene1 : MonoBehaviour
 {
@@ -25,6 +22,11 @@ public class SampleScene1 : MonoBehaviour
     const int MoveLeft = -MoveWidth / 2;
     const int MoveWidth3 = 400 / 3;
 
+    readonly Vector2 Position1 = new Vector2(MoveLeft + MoveWidth3 * 0, 0.0f);
+    readonly Vector2 Position2 = new Vector2(MoveLeft + MoveWidth3 * 1, 0.0f);
+    readonly Vector2 Position3 = new Vector2(MoveLeft + MoveWidth3 * 2, 0.0f);
+    readonly Vector2 Position4 = new Vector2(MoveLeft + MoveWidth3 * 3, 0.0f);
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,21 +41,21 @@ public class SampleScene1 : MonoBehaviour
         mainChain?.Skip();
         mainChain = new ChainSequence(
             ChainStartButtonEnabled(false),
-            new ChainAction(() => moveRect.anchoredPosition = new Vector2(MoveLeft, 0.0f)),
+            new ChainAction(() => moveRect.anchoredPosition = Position1),
             ChainSetMoveText("1"),
             new ChainRace(
                 new ChainButton(skipButton),
                 new ChainSequence(
-                    Utility.ChainMoveTween(moveRect, new Vector2(MoveLeft + MoveWidth3, 0.0f), 0.7f),
+                    Utility.ChainMoveTween(moveRect, Position2, 0.7f),
                     Utility.ChainPlaySound(SoundType.Pong1),
                     ChainSetMoveText("2"),
                     new ChainDelay(0.2f),
-                    Utility.ChainMoveTween(moveRect, new Vector2(MoveLeft + MoveWidth3 * 2, 0.0f), 0.7f),
-                    Utility.ChainPlaySound(SoundType.Pong1),
+                    Utility.ChainMoveTween(moveRect, Position3, 0.7f),
+                    Utility.ChainPlaySound(SoundType.Pong2),
                     ChainSetMoveText("3"),
                     new ChainDelay(0.2f),
-                    Utility.ChainMoveTween(moveRect, new Vector2(MoveLeft + MoveWidth3 * 3, 0.0f), 0.7f),
-                    Utility.ChainPlaySound(SoundType.Pong1),
+                    Utility.ChainMoveTween(moveRect, Position4, 0.7f),
+                    Utility.ChainPlaySound(SoundType.Pong3),
                     ChainSetMoveText("4"),
                     new ChainDelay(0.2f)
                 )
@@ -69,12 +71,12 @@ public class SampleScene1 : MonoBehaviour
         mainChain?.Skip();
         mainChain = new ChainSequence(
             ChainStartButtonEnabled(false),
-            new ChainAction(() => moveRect.anchoredPosition = new Vector2(MoveLeft, 0.0f)),
+            new ChainAction(() => moveRect.anchoredPosition = Position1),
             ChainSetMoveText("1"),
             new ChainRace(
                 new ChainButton(skipButton),
                 new ChainSequence(
-                    Utility.ChainMoveTween(moveRect, new Vector2(MoveLeft + MoveWidth3, 0.0f), 0.7f),
+                    Utility.ChainMoveTween(moveRect, Position2, 0.7f),
                     Utility.ChainPlaySound(SoundType.Pong1),
                     ChainSetMoveText("2"),
                     new ChainDelay(0.2f)
@@ -83,8 +85,8 @@ public class SampleScene1 : MonoBehaviour
             new ChainRace(
                 new ChainButton(skipButton),
                 new ChainSequence(
-                    Utility.ChainMoveTween(moveRect, new Vector2(MoveLeft + MoveWidth3 * 2, 0.0f), 0.7f),
-                    Utility.ChainPlaySound(SoundType.Pong1),
+                    Utility.ChainMoveTween(moveRect, Position3, 0.7f),
+                    Utility.ChainPlaySound(SoundType.Pong2),
                     ChainSetMoveText("3"),
                     new ChainDelay(0.2f)
                 )
@@ -92,8 +94,8 @@ public class SampleScene1 : MonoBehaviour
             new ChainRace(
                 new ChainButton(skipButton),
                 new ChainSequence(
-                    Utility.ChainMoveTween(moveRect, new Vector2(MoveLeft + MoveWidth3 * 3, 0.0f), 0.7f),
-                    Utility.ChainPlaySound(SoundType.Pong1),
+                    Utility.ChainMoveTween(moveRect, Position4, 0.7f),
+                    Utility.ChainPlaySound(SoundType.Pong3),
                     ChainSetMoveText("4"),
                     new ChainDelay(0.2f)                
                 )
