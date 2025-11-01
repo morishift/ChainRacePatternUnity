@@ -40,8 +40,8 @@ namespace ChainPattern
             if (targetButton != null)
             {
                 targetButton.onClick.RemoveListener(OnClickButton);
+                targetButton.interactable = false;
             }
-            targetButton.interactable = false;
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace ChainPattern
             if (targetButton != null)
             {
                 targetButton.onClick.RemoveListener(OnClickButton);
+                targetButton.interactable = false;
             }
-            targetButton.interactable = false;
             Complete();
         }
     }

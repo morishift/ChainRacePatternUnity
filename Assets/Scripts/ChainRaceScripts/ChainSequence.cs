@@ -44,7 +44,7 @@ namespace ChainPattern
         /// </summary>
         protected override void SkipInternal()
         {
-            currentChain.Skip();
+            currentChain?.Skip();
             currentChain = null;
             while (chainList.Count > 0)
             {

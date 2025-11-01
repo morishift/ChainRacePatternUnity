@@ -34,8 +34,9 @@ namespace ChainPattern
         public Task Start()
         {
             if (state != State.Ready)
-            {                                
-                return Task.FromResult(true);
+            {
+                // すでに開始済みならばそれを待つ
+                return currentTcs?.Task ?? Task.CompletedTask;
             }
             currentTcs = new TaskCompletionSource<bool>();
             state = State.Started;
@@ -83,10 +84,10 @@ namespace ChainPattern
             {
                 return;
             }
-            state = State.Completed;            
-            currentTcs?.TrySetResult(true);
+            state = State.Completed;
             onComplete?.Invoke();
             onComplete = null;
+            currentTcs?.TrySetResult(true);
         }
 
         /// <summary>
