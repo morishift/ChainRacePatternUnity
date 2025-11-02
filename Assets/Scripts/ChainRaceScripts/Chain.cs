@@ -71,9 +71,9 @@ namespace ChainPattern
         /// <summary>
         /// Sets whether this Chain will be skipped immediately after starting
         /// </summary>
-        public void SetIsWillSkip(bool willskip)
+        public void SetIsWillSkip(bool willSkip)
         {
-            isWillSkip = willskip;
+            isWillSkip = willSkip;
         }
 
         /// <summary>

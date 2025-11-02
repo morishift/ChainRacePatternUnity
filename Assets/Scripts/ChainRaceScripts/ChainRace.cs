@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// Chains that completes when any of its child chains completes first
+    /// Chain that completes when any of its child chains completes first
     /// </summary>
     public class ChainRace : Chain
     {
@@ -77,7 +77,7 @@ namespace ChainPattern
         protected override void SkipInternal()
         {
             isConsuming = true;
-            ConsumeStartedChainListAndChainList();
+            ConsumeStartedAndPendingChains();
             isEnabled = false;
             isStarting = false;
             isStarted = false;
@@ -93,7 +93,7 @@ namespace ChainPattern
             {
                 startedChainList.Remove(chain);
                 isConsuming = true;
-                ConsumeStartedChainListAndChainList();
+                ConsumeStartedAndPendingChains();
                 isEnabled = false;
                 isStarting = false;
                 isStarted = false;
@@ -103,9 +103,9 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Consumes(completes or skips) all started and pending chains
+        /// Consumes (completes or skips) all started and pending chains
         /// </summary>
-        private void ConsumeStartedChainListAndChainList()
+        private void ConsumeStartedAndPendingChains()
         {
             while (startedChainList.Count > 0)
             {
@@ -117,11 +117,11 @@ namespace ChainPattern
             {
                 Chain c = chainList[0];
                 chainList.RemoveAt(0);
-                bool end = false;
-                c.SetCompleteCallback(() => end = true);
+                bool complete = false;
+                c.SetCompleteCallback(() => complete = true);
                 c.SetIsWillSkip(true);
                 c.Start();
-                if (!end)
+                if (!complete)
                 {
                     c.Skip();
                 }

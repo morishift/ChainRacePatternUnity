@@ -36,9 +36,9 @@ namespace ChainPattern
         /// <summary>
         /// Sets the action to be executed
         /// </summary>
-        public void SetAction(Action a)
+        public void SetAction(Action action)
         {
-            actionToCall = a;
+            actionToCall = action;
         }
 
         /// <summary>

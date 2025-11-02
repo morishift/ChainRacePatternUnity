@@ -5,17 +5,17 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// Chain that executes multiple chain sequentially
+    /// Chain that executes multiple chains sequentially
     /// </summary>
     public class ChainSequence : Chain
     {
         List<Chain> chainList = new List<Chain>();
         Chain currentChain;
-        bool enableFlg;        
+        bool isEnabled;
 
         public ChainSequence(params Chain[] chains)
         {
-            enableFlg = true;
+            isEnabled = true;
             chainList.AddRange(chains);
         }
 
@@ -24,7 +24,7 @@ namespace ChainPattern
         /// </summary>        
         public ChainSequence Add(Chain chain)
         {
-            if (enableFlg)
+            if (isEnabled)
             {
                 chainList.Add(chain);
             }
@@ -50,16 +50,16 @@ namespace ChainPattern
             {
                 Chain c = chainList[0];
                 chainList.RemoveAt(0);
-                bool end = false;
-                c.SetCompleteCallback(() => end = true);
+                bool complete = false;
+                c.SetCompleteCallback(() => complete = true);
                 c.SetIsWillSkip(true);
                 c.Start();
-                if (!end)
+                if (!complete)
                 {
                     c.Skip();
                 }
             }
-            enableFlg = false;
+            isEnabled = false;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace ChainPattern
         {
             if (chainList.Count <= 0)
             {
-                enableFlg = false;
+                isEnabled = false;
                 Complete();
                 return;
             }
