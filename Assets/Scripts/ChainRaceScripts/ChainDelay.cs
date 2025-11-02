@@ -11,15 +11,15 @@ namespace ChainPattern
     /// </summary>
     public class ChainDelay : Chain
     {
-        int delayMilliseconds;
-        CancellationTokenSource cts;
+        float delaySeconds;
+        float endTime;        
 
         /// <summary>
         /// Creates a delay chain with duration in seconds
         /// </summary>
         public ChainDelay(float seconds)
         {
-            delayMilliseconds = (int)(seconds * 1000);
+            delaySeconds = seconds;
         }
 
         /// <summary>
@@ -27,7 +27,13 @@ namespace ChainPattern
         /// </summary>
         protected override void StartInternal()
         {
-            _ = DelayAsync();
+            if (isWillSkip)
+            {
+                // Do nothing if it will be skipped immediately
+                return;
+            }
+            endTime = Time.time + delaySeconds;
+            CustomUpdateComponent.AddUpdateListener(OnCustomUpdate);
         }
 
         /// <summary>
@@ -35,38 +41,18 @@ namespace ChainPattern
         /// </summary>
         protected override void SkipInternal()
         {
-            cts?.Cancel();
+            CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdate);
         }
 
         /// <summary>
-        /// Performs the delay asynchronously
+        /// Called every frame by CustomUpdateComponent
         /// </summary>
-        private async Task DelayAsync()
-        {
-            try
-            {
-                if (isWillSkip)
-                {
-                    // Do nothing if it will be skipped immediately
-                    return;
-                }
-                cts = new CancellationTokenSource();
-                await Task.Delay(delayMilliseconds, cts.Token);
+        private void OnCustomUpdate()
+        {            
+            if (endTime <= Time.time)
+            {                
+                CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdate);
                 Complete();
-            }
-            catch (OperationCanceledException)
-            {
-                // Skipped (normal behavior)
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Error in ChainDelay: {ex}");
-                Complete();
-            }
-            finally
-            {
-                cts?.Dispose();
-                cts = null;
             }
         }
     }

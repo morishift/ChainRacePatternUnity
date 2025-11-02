@@ -43,7 +43,7 @@ namespace ChainPattern
             if (isStarted)
             {
                 isStarted = false;
-                CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdateComponent);
+                CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdate);
                 Complete();
             }
         }
@@ -54,7 +54,7 @@ namespace ChainPattern
         protected override void StartInternal()
         {
             isStarted = true;
-            CustomUpdateComponent.AddUpdateListener(OnCustomUpdateComponent);
+            CustomUpdateComponent.AddUpdateListener(OnCustomUpdate);
             onStart?.Invoke();
         }
 
@@ -64,14 +64,14 @@ namespace ChainPattern
         protected override void SkipInternal()
         {
             isStarted = false;
-            CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdateComponent);
+            CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdate);
             onSkip?.Invoke();
         }
 
         /// <summary>
         /// Called every frame after ChainWork starts
         /// </summary>
-        private void OnCustomUpdateComponent()
+        private void OnCustomUpdate()
         {
             onUpdate?.Invoke();
         }
