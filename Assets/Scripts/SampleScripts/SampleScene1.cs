@@ -47,7 +47,6 @@ namespace Sample
         /// </summary>
         private async void OnClickSequence1Button()
         {
-            chainSequence?.Skip();
             chainSequence = new ChainSequence(
                 ChainSetButtonsEnabled(false),
                 ChainSetMoveRectPosition(Position1),
@@ -81,7 +80,6 @@ namespace Sample
         /// </summary>
         private async void OnClickSequence2Button()
         {
-            chainSequence?.Skip();
             chainSequence = new ChainSequence(
                 ChainSetButtonsEnabled(false),
                 ChainSetMoveRectPosition(Position1),
@@ -127,7 +125,6 @@ namespace Sample
         /// </summary>
         private async void OnClickSequence3Button()
         {
-            chainSequence?.Skip();
             chainSequence = new ChainSequence(
                 ChainSetButtonsEnabled(false),
                 ChainSetMoveRectPosition(Position1),
