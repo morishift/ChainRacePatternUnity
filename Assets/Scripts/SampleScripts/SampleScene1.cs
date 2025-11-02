@@ -19,8 +19,7 @@ namespace Sample
         [SerializeField]
         TMPro.TextMeshProUGUI moveRectText;
 
-        Button startButton1;
-        Button startButton2;
+        List<Button> sequenceButtons = new List<Button>();
         Button skipButton;
         ChainSequence chainSequence;
 
@@ -35,59 +34,62 @@ namespace Sample
 
         void Start()
         {
-            startButton1 = testButtons.AddButton("Start1", OnClickStartButton1);
-            startButton2 = testButtons.AddButton("Start2", OnClickStartButton2);
+            sequenceButtons.Add(testButtons.AddButton("Sequence1", OnClickSequence1Button));
+            sequenceButtons.Add(testButtons.AddButton("Sequence2", OnClickSequence2Button));
+            sequenceButtons.Add(testButtons.AddButton("Sequence3", OnClickSequence3Button));
             skipButton = testButtons.AddButton("Skip");
             skipButton.interactable = false;
         }
 
         /// <summary>
-        /// Sample that skips to the end when the skip button is pressed
+        /// Sequence 1: Skip to the end
+        /// Press skip button -> entire animation skips to Position4
         /// </summary>
-        private async void OnClickStartButton1()
+        private async void OnClickSequence1Button()
         {
             chainSequence?.Skip();
             chainSequence = new ChainSequence(
-                ChainSetStartButtonsEnabled(false),
-                new ChainAction(() => moveRect.anchoredPosition = Position1),
+                ChainSetButtonsEnabled(false),
+                ChainSetMoveRectPosition(Position1),
                 ChainSetMoveRectText("1"),
                 new ChainRace(
                     new ChainButton(skipButton),
                     new ChainSequence(
-                        Utility.ChainMoveTween(moveRect, Position2, 0.7f),
+                        Utility.ChainMoveTween(moveRect, Position2, 1.0f),
                         Utility.ChainPlaySound(SoundType.Pong1),
                         ChainSetMoveRectText("2"),
                         new ChainDelay(0.2f),
-                        Utility.ChainMoveTween(moveRect, Position3, 0.7f),
+                        Utility.ChainMoveTween(moveRect, Position3, 1.0f),
                         Utility.ChainPlaySound(SoundType.Pong1),
                         ChainSetMoveRectText("3"),
                         new ChainDelay(0.2f),
-                        Utility.ChainMoveTween(moveRect, Position4, 0.7f),
+                        Utility.ChainMoveTween(moveRect, Position4, 1.0f),
                         Utility.ChainPlaySound(SoundType.Pong1),
                         ChainSetMoveRectText("4"),
                         new ChainDelay(0.2f)
                     )
                 ),
-                ChainSetStartButtonsEnabled(true)
+                ChainSetButtonsEnabled(true)
             );
-
-            await chainSequence.Start();
+            
+            await chainSequence.Start();            
         }
 
         /// <summary>
-        /// Sample that skips each section when the skip button is pressed
+        /// Sequence 2: Skip each section independently
+        /// Press skip button -> current section skips, next section starts
         /// </summary>
-        private async void OnClickStartButton2()
+        private async void OnClickSequence2Button()
         {
             chainSequence?.Skip();
             chainSequence = new ChainSequence(
-                ChainSetStartButtonsEnabled(false),
-                new ChainAction(() => moveRect.anchoredPosition = Position1),
+                ChainSetButtonsEnabled(false),
+                ChainSetMoveRectPosition(Position1),
                 ChainSetMoveRectText("1"),
                 new ChainRace(
                     new ChainButton(skipButton),
                     new ChainSequence(
-                        Utility.ChainMoveTween(moveRect, Position2, 0.7f),
+                        Utility.ChainMoveTween(moveRect, Position2, 1.0f),
                         Utility.ChainPlaySound(SoundType.Pong1),
                         ChainSetMoveRectText("2"),
                         new ChainDelay(0.2f)
@@ -96,7 +98,7 @@ namespace Sample
                 new ChainRace(
                     new ChainButton(skipButton),
                     new ChainSequence(
-                        Utility.ChainMoveTween(moveRect, Position3, 0.7f),
+                        Utility.ChainMoveTween(moveRect, Position3, 1.0f),
                         Utility.ChainPlaySound(SoundType.Pong1),
                         ChainSetMoveRectText("3"),
                         new ChainDelay(0.2f)
@@ -105,43 +107,94 @@ namespace Sample
                 new ChainRace(
                     new ChainButton(skipButton),
                     new ChainSequence(
-                        Utility.ChainMoveTween(moveRect, Position4, 0.7f),
+                        Utility.ChainMoveTween(moveRect, Position4, 1.0f),
                         Utility.ChainPlaySound(SoundType.Pong1),
                         ChainSetMoveRectText("4"),
                         new ChainDelay(0.2f)
                     )
                 ),
-                ChainSetStartButtonsEnabled(true)
+                ChainSetButtonsEnabled(true)
+            );
+            await chainSequence.Start();            
+        }
+
+
+        /// <summary>        
+        /// Sequence 3: Section 2 cannot be skipped (important scene)
+        /// Section 1: Skippable
+        /// Section 2: NOT skippable (must watch)
+        /// Section 3: Skippable 
+        /// </summary>
+        private async void OnClickSequence3Button()
+        {
+            chainSequence?.Skip();
+            chainSequence = new ChainSequence(
+                ChainSetButtonsEnabled(false),
+                ChainSetMoveRectPosition(Position1),
+                ChainSetMoveRectText("1"),
+                new ChainRace(
+                    new ChainButton(skipButton),
+                    new ChainSequence(
+                        Utility.ChainMoveTween(moveRect, Position2, 1.0f),
+                        Utility.ChainPlaySound(SoundType.Pong1),
+                        ChainSetMoveRectText("2"),
+                        new ChainDelay(0.2f)
+                    )
+                ),
+                new ChainSequence(
+                    Utility.ChainMoveTween(moveRect, Position3, 1.0f),
+                    Utility.ChainPlaySound(SoundType.Pong1),
+                    ChainSetMoveRectText("3"),
+                    new ChainDelay(0.2f)
+                ),
+                new ChainRace(
+                    new ChainButton(skipButton),
+                    new ChainSequence(
+                        Utility.ChainMoveTween(moveRect, Position4, 1.0f),
+                        Utility.ChainPlaySound(SoundType.Pong1),
+                        ChainSetMoveRectText("4"),
+                        new ChainDelay(0.2f)
+                    )
+                ),
+                ChainSetButtonsEnabled(true)
             );
             await chainSequence.Start();
         }
 
+
         /// <summary>
-        /// Enables or disables the start buttons
+        /// Enables or disables the sequence buttons        
         /// </summary>
-        private Chain ChainSetStartButtonsEnabled(bool enabed)
+        private Chain ChainSetButtonsEnabled(bool enabed)
         {
             return new ChainAction(() =>
             {
-                if (startButton1 != null)
+                foreach (Button button in sequenceButtons)
                 {
-                    startButton1.interactable = enabed;
-                }
-                if (startButton2 != null)
-                {
-                    startButton2.interactable = enabed;
+                    button.interactable = enabed;
                 }
             });
         }
 
         /// <summary>
-        /// Sets the thext of the moving rectangle
+        /// Sets the text of the moving rectangle
         /// </summary>
         private Chain ChainSetMoveRectText(string text)
         {
             return new ChainAction(() =>
             {
                 moveRectText.text = text;
+            });
+        }
+
+        /// <summary>
+        /// Sets the position of the moving rectangle
+        /// </summary>
+        private Chain ChainSetMoveRectPosition(Vector2 position)
+        {
+            return new ChainAction(() =>
+            {
+                moveRect.anchoredPosition = position;
             });
         }
     }
