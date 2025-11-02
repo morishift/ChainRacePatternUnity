@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using ChainPattern;
 
-namespace ChainPattern
+namespace Sample
 {
     /// <summary>
     /// Chain that completes when a button is clicked
