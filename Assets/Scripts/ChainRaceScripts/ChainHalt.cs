@@ -5,23 +5,24 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// 実行開始後停止するChainクラス
+    /// Chain class that halts execution after starting
     /// </summary>
     public class ChainHalt: Chain
     {
         /// <summary>
-        /// 開始
+        /// Starts execution
         /// </summary>
         protected override void StartInternal()
         {
-            // Complete()しない
+            // Does not call Complete()
         }
 
         /// <summary>
-        /// スキップ時
+        /// Called when skipped
         /// </summary>
         protected override void SkipInternal()
         {
         }
     }
 }
+

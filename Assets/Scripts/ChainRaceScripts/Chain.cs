@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// Chainクラスの基底クラス
+    /// Base class for Chain classes
     /// </summary>
     public abstract class Chain
     {
@@ -29,13 +30,13 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Chainの実行を開始
+        /// Starts execution of the Chain
         /// </summary>
         public Task Start()
         {
             if (state != State.Ready)
             {
-                // すでに開始済みならばそれを待つ
+                // If already started, return the existing task to wait for it
                 return currentTcs?.Task ?? Task.CompletedTask;
             }
             currentTcs = new TaskCompletionSource<bool>();
@@ -45,7 +46,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Chainをスキップして即座に完了
+        /// Skips the Chain and completes it immediately
         /// </summary>
         public void Skip()
         {
@@ -54,13 +55,13 @@ namespace ChainPattern
                 return;
             }
             state = State.Skipped;
-            onComplete = null; // スキップ時は完了コールバックを呼ばない
+            onComplete = null; // Don't call completion callback when skipped
             SkipInternal();            
             currentTcs?.TrySetResult(true);
         }
 
         /// <summary>
-        /// 完了コールバックを設定
+        /// Sets the completion callback
         /// </summary>
         public void SetCompleteCallback(Action callback)
         {
@@ -68,7 +69,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// スタート直後にSkipされるかどうかを設定
+        /// Sets whether this Chain will be skipped immediately after starting
         /// </summary>
         public void SetIsWillSkip(bool willskip)
         {
@@ -76,7 +77,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Chainを完了状態にする。派生クラスから呼ぶ
+        /// Marks the Chain as completed. Called from derived classes
         /// </summary>
         protected void Complete()
         {
@@ -91,7 +92,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Start直後にSkipされるかどうか
+        /// Indicates whether this Chain will be skipped immediately after Start
         /// </summary>
         protected bool isWillSkip
         {
@@ -100,12 +101,12 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// 実際の開始処理。派生クラスで実装
+        /// Internal start implementation. Must be implemented by derived classes
         /// </summary>
         protected abstract void StartInternal();
 
         /// <summary>
-        /// 実際のスキップ処理。派生クラスで実装
+        /// Internal skip implementation. Must be implemented by derived classes
         /// </summary>
         protected abstract void SkipInternal();
     }

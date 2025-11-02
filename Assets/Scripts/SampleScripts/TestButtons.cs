@@ -4,30 +4,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TestButtons : MonoBehaviour
+namespace Sample
 {
-    [SerializeField]
-    Button srcButton;
-
-    private void Awake()
-    {
-        srcButton.gameObject.SetActive(false);
-    }
-
     /// <summary>
-    /// ƒ{ƒ^ƒ“‚ð’Ç‰Á‚·‚é
+    /// Button helper for sample testing
     /// </summary>
-    public Button AddButton(string caption, Action onclick)
+    public class TestButtons : MonoBehaviour
     {
-        GameObject go = Instantiate<GameObject>(srcButton.gameObject, srcButton.transform.parent);
-        go.SetActive(true);
-        Button button = go.GetComponent<Button>();
-        button.onClick.AddListener(() =>
+        [SerializeField]
+        Button sourceButton;
+
+        private void Awake()
         {
-            onclick?.Invoke();
-        });
-        TMPro.TextMeshProUGUI text = go.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-        text.text = caption;
-        return button;
+            sourceButton.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// Adds a test button with the specified caption
+        /// </summary>        
+        public Button AddButton(string caption)
+        {
+            return AddButton(caption, null);
+        }
+
+        /// <summary>
+        /// Adds a test button with the specified caption and optional click event
+        /// </summary>
+        public Button AddButton(string caption, Action action)
+        {
+            GameObject go = Instantiate<GameObject>(sourceButton.gameObject, sourceButton.transform.parent);
+            go.SetActive(true);
+            Button button = go.GetComponent<Button>();
+            TMPro.TextMeshProUGUI text = go.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            text.text = caption;
+
+            if (action != null)
+            {
+                button.onClick.AddListener(() =>
+                {
+                    action?.Invoke();
+                });
+            }
+
+            return button;
+        }
     }
 }

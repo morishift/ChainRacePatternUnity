@@ -5,37 +5,37 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// Chainの並列実行
+    /// Chain that executes multiple chains in parallel
     /// </summary>
     public class ChainParallel : Chain
     {
         List<Chain> chainList = new List<Chain>();
         List<Chain> startedChainList = new List<Chain>();
-        bool enableFlg;
-        bool startingFlg;
-        bool startedFlg;
-        bool consumeFlg;
+        bool isEnabled;
+        bool isStarting;
+        bool isStarted;
+        bool isConsuming;
 
         public ChainParallel(params Chain[] chains)
         {
-            enableFlg = true;
+            isEnabled = true;
             chainList.AddRange(chains);
         }
 
         /// <summary>
-        /// 追加
+        /// Adds a chain to the parallel execution
         /// </summary>        
         public ChainParallel Add(Chain chain)
         {
-            if (!enableFlg)
+            if (!isEnabled)
             {
-                // 無視する
+                // Ignore
             }
-            else if (startingFlg || consumeFlg)
+            else if (isStarting || isConsuming)
             {
                 chainList.Add(chain);
             }
-            else if (startedFlg)
+            else if (isStarted)
             {
                 startedChainList.Add(chain);
                 chain.SetCompleteCallback(() => OnChainComplete(chain));
@@ -50,12 +50,12 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// 開始
+        /// Starts execution
         /// </summary>
         protected override void StartInternal()
         {
-            startingFlg = true;
-            while (chainList.Count > 0 && enableFlg)
+            isStarting = true;
+            while (chainList.Count > 0 && isEnabled)
             {
                 Chain c = chainList[0];
                 chainList.RemoveAt(0);
@@ -64,28 +64,28 @@ namespace ChainPattern
                 c.SetIsWillSkip(isWillSkip);                
                 c.Start();
             }
-            if (enableFlg)
+            if (isEnabled)
             {
-                startingFlg = false;
-                startedFlg = true;
+                isStarting = false;
+                isStarted = true;
             }
         }
 
         /// <summary>
-        /// スキップ
+        /// Called when skipped
         /// </summary>
         protected override void SkipInternal()
         {
-            consumeFlg = true;
+            isConsuming = true;
             ConsumeStartedChainListAndChainList();
-            enableFlg = false;
-            startingFlg = false;
-            startedFlg = false;
-            consumeFlg = false;
+            isEnabled = false;
+            isStarting = false;
+            isStarted = false;
+            isConsuming = false;
         }
 
         /// <summary>
-        /// Chainの完了コールバック
+        /// Callback invoked when a chain completes
         /// </summary>        
         private void OnChainComplete(Chain chain)
         {
@@ -94,17 +94,17 @@ namespace ChainPattern
                 startedChainList.Remove(chain);
                 if (chainList.Count <= 0 && startedChainList.Count <= 0)
                 {
-                    enableFlg = false;
-                    startingFlg = false;
-                    startedFlg = false;
-                    consumeFlg = false;
+                    isEnabled = false;
+                    isStarting = false;
+                    isStarted = false;
+                    isConsuming = false;
                     Complete();
                 }
             }
         }
 
         /// <summary>
-        /// 開始済みChainと未開始Chainの消化
+        /// Consumes(completes or skips) all started and pending chains
         /// </summary>
         private void ConsumeStartedChainListAndChainList()
         {

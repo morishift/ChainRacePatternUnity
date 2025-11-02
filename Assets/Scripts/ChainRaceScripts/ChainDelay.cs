@@ -1,3 +1,4 @@
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// 一定時間待機するChain
+    /// Chain that waits for a specified duration
     /// </summary>
     public class ChainDelay : Chain
     {
@@ -14,7 +15,7 @@ namespace ChainPattern
         CancellationTokenSource cts;
 
         /// <summary>
-        /// 秒指定
+        /// Creates a delay chain with duration in seconds
         /// </summary>
         public ChainDelay(float seconds)
         {
@@ -22,7 +23,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// 開始
+        /// Starts execution
         /// </summary>
         protected override void StartInternal()
         {
@@ -30,7 +31,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// スキップ
+        /// Called when skipped
         /// </summary>
         protected override void SkipInternal()
         {
@@ -38,7 +39,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// 遅延処理
+        /// Performs the delay asynchronously
         /// </summary>
         private async Task DelayAsync()
         {
@@ -46,7 +47,7 @@ namespace ChainPattern
             {
                 if (isWillSkip)
                 {
-                    // 直後にSkipする場合はなにもしない
+                    // Do nothing if it will be skipped immediately
                     return;
                 }
                 cts = new CancellationTokenSource();
@@ -55,7 +56,7 @@ namespace ChainPattern
             }
             catch (OperationCanceledException)
             {
-                // Skip された (正常)
+                // Skipped (normal behavior)
             }
             catch (Exception ex)
             {

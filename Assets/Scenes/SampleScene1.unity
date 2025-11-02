@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 496298436}
   - component: {fileID: 496298439}
   m_Layer: 5
-  m_Name: SrcButton
+  m_Name: SourceButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -469,7 +469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f371785e708838a4ea8fe33a66273bd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  srcButton: {fileID: 496298436}
+  sourceButton: {fileID: 496298436}
 --- !u!1 &625989210
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,7 +482,7 @@ GameObject:
   - component: {fileID: 625989213}
   - component: {fileID: 625989212}
   m_Layer: 5
-  m_Name: MovePanel
+  m_Name: MoveRect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -758,7 +758,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testButtons: {fileID: 562792600}
   moveRect: {fileID: 625989211}
-  moveText: {fileID: 1818782290}
+  moveRectText: {fileID: 1818782290}
 --- !u!114 &803626106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -926,7 +926,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SrcButton
+  m_text: SourceButton
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -953,8 +953,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -1068,7 +1068,7 @@ GameObject:
   - component: {fileID: 1818782291}
   - component: {fileID: 1818782290}
   m_Layer: 5
-  m_Name: MoveText
+  m_Name: MoveRectText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

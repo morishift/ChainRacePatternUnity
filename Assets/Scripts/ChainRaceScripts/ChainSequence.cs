@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// Chainの順次実行
+    /// Chain that executes multiple chain sequentially
     /// </summary>
     public class ChainSequence : Chain
     {
@@ -20,7 +20,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// 追加
+        /// Adds a chain to the sequence
         /// </summary>        
         public ChainSequence Add(Chain chain)
         {
@@ -32,7 +32,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// 開始
+        /// Starts execution
         /// </summary>
         protected override void StartInternal()
         { 
@@ -40,7 +40,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// スキップ
+        /// Called when skipped
         /// </summary>
         protected override void SkipInternal()
         {
@@ -63,7 +63,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// 次のChainを実行
+        /// Executes the next chain in the sequence
         /// </summary>
         private void NextChain()
         {

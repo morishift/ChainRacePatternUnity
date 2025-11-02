@@ -5,12 +5,12 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// 実行開始後即座に完了するChainクラス
+    /// Chain class that completes immediately after starting (no operation)
     /// </summary>
     public class ChainNop : Chain
     {
         /// <summary>
-        /// 開始
+        /// Starts execution
         /// </summary>
         protected override void StartInternal()
         {
@@ -18,10 +18,12 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// スキップ時
+        /// Called when skipped
         /// </summary>
         protected override void SkipInternal()
         {
         }
     }
 }
+
+

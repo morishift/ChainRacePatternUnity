@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,56 +7,56 @@ using UnityEngine;
 namespace ChainPattern
 {
     /// <summary>
-    /// 一つの関数を実行するChain
+    /// Chain that executes a single action/function
     /// </summary>
     public class ChainAction : Chain
     {
-        Action calledAction;
+        Action actionToCall;
 
         public ChainAction()
         {         
         }
 
         /// <summary>
-        /// 関数を指定したChain
+        /// Creates a Chain with a specified action/function
         /// </summary>        
-        public ChainAction(Action a)
+        public ChainAction(Action action)
         {
-            calledAction = a;
+            actionToCall = action;
         }
 
         /// <summary>
-        /// isWillSkipを引数に取る関数を実行するChain
+        /// Creates a Chain that executes an action which takes isWillSkip as a parameter
         /// </summary>        
         public ChainAction(Action<bool> action)
         { 
-            calledAction = () => action?.Invoke(isWillSkip);
+            actionToCall = () => action?.Invoke(isWillSkip);
         }
-
+        
         /// <summary>
-        /// 関数指定
+        /// Sets the action to be executed
         /// </summary>
         public void SetAction(Action a)
         {
-            calledAction = a;
+            actionToCall = a;
         }
 
         /// <summary>
-        /// 開始
+        /// Starts execution
         /// </summary>
         protected override void StartInternal()
         {
-            calledAction?.Invoke();
-            calledAction = null;
+            actionToCall?.Invoke();
+            actionToCall = null;
             Complete();
         }
 
         /// <summary>
-        /// スキップ時
+        /// Called when skipped
         /// </summary>
         protected override void SkipInternal()
         {            
-            calledAction = null;
+            actionToCall = null;
         }
     }
 }

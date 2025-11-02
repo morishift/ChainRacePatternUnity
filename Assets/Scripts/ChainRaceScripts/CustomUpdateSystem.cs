@@ -5,7 +5,7 @@ using System;
 namespace ChainPattern
 {
     /// <summary>
-    /// Updateタイミングの取得用コンポーネント
+    /// Component for capturing Unity's Update timing
     /// </summary>
     public class CustomUpdateComponent : MonoBehaviour
     {

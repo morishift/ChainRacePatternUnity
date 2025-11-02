@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace ChainPattern
 {
     /// <summary>
-    /// ボタンが押されたら終了するChain
+    /// Chain that completes when a button is clicked
     /// </summary>
     public class ChainButton : Chain
     {
@@ -19,7 +19,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// 開始
+        /// Starts execution
         /// </summary>
         protected override void StartInternal()
         {
@@ -33,7 +33,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// スキップ時
+        /// Called when skipped
         /// </summary>
         protected override void SkipInternal()
         {
@@ -45,7 +45,7 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// ボタンをクリックした
+        /// Called when the button is clicked
         /// </summary>
         private void OnClickButton()
         {

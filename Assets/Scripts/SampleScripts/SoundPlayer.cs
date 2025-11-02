@@ -1,83 +1,73 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-/// <summary>
-/// サウンドタイプ
-/// </summary>
-public enum SoundType
-{ 
-    Gao1,
-    Pong1,
-    Pong2,
-    Pong3,
-    Pong4
-}
-
-/// <summary>
-/// サウンド再生用コンポーネント
-/// </summary>
-public class SoundPlayer : MonoBehaviour
+namespace Sample
 {
-    [SerializeField] 
-    AudioClip[] audioClips;
-    List<AudioSource> audioSources = new List<AudioSource>();
-
-    static SoundPlayer instance;
-
-    void Awake()
-    {
-        instance = this;
-    }
-
-    void Start()
-    {
-        for (int i = 0; i < 3; ++i)
-        { 
-            audioSources.Add(gameObject.AddComponent<AudioSource>());
-        }
-    }
-
     /// <summary>
-    /// サウンドの再生
+    /// Component for playing sound effects
     /// </summary>
-    public void PlaySound(SoundType sound)
+    public class SoundPlayer : MonoBehaviour
     {
-        int index = (int)sound;
-        if (index >= audioClips.Length)
+        static SoundPlayer instance;
+        const int MaxAudioSourceCount = 5;
+
+        [SerializeField]
+        AudioClip[] audioClips;
+        List<AudioSource> audioSources = new List<AudioSource>();       
+
+        void Awake()
         {
-            return;
+            instance = this;
         }
-        PlayAudioClip(audioClips[(int)sound]);
-    }
 
-    /// <summary>
-    /// 指定されたオーディオクリップを再生する
-    /// </summary>
-    public void PlayAudioClip(AudioClip clip)
-    {
-        int index = audioSources.FindIndex(_s => !_s.isPlaying);
-        if (index < 0)
+        void Start()
         {
-            Debug.Log("Unknown");
-            index = 0;
+            for (int i = 0; i < MaxAudioSourceCount; ++i)
+            {
+                audioSources.Add(gameObject.AddComponent<AudioSource>());
+            }
         }
-        var source = audioSources[index];
-        audioSources.RemoveAt(index);
-        audioSources.Add(source);
-        source.Stop();
-        source.clip = clip;
-        source.Play();
-    }
 
-    /// <summary>
-    /// SoundPlayerの取得
-    /// </summary>
-    public static SoundPlayer Get()
-    {
-        return instance;
+        /// <summary>
+        /// Plays a sound by type
+        /// </summary>
+        public void PlaySound(SoundType sound)
+        {
+            int index = (int)sound;
+            if (index >= audioClips.Length)
+            {
+                return;
+            }
+            PlayAudioClip(audioClips[(int)sound]);
+        }
+
+        /// <summary>
+        /// Plays the specified audio clip
+        /// </summary>
+        public void PlayAudioClip(AudioClip clip)
+        {
+            int index = audioSources.FindIndex(source => !source.isPlaying);
+            if (index < 0)
+            {
+                index = 0;
+            }
+            var source = audioSources[index];
+            audioSources.RemoveAt(index);
+            audioSources.Add(source);
+            source.Stop();
+            source.clip = clip;
+            source.Play();
+        }
+
+        /// <summary>
+        /// Gets the SoundPlayer instance
+        /// </summary>
+        public static SoundPlayer Get()
+        {
+            return instance;
+        }
     }
 }
-
 
