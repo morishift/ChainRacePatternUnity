@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace ChainPattern
 {
@@ -20,7 +21,7 @@ namespace ChainPattern
             Completed,
         }
 
-        TaskCompletionSource<bool> currentTcs;
+        UniTaskCompletionSource<bool> currentUtcs;
         State state;        
         Action onComplete;
 
@@ -32,17 +33,17 @@ namespace ChainPattern
         /// <summary>
         /// Starts execution of the Chain
         /// </summary>
-        public Task Start()
+        public UniTask Start()
         {
             if (state != State.Ready)
             {
                 // If already started, return the existing task to wait for it
-                return currentTcs?.Task ?? Task.CompletedTask;
+                return currentUtcs?.Task ?? UniTask.CompletedTask;
             }
-            currentTcs = new TaskCompletionSource<bool>();
+            currentUtcs = new UniTaskCompletionSource<bool>();
             state = State.Started;
             StartInternal();
-            return currentTcs.Task;
+            return currentUtcs.Task;
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace ChainPattern
             state = State.Skipped;
             onComplete = null; // Don't call completion callback when skipped
             SkipInternal();            
-            currentTcs?.TrySetResult(true);
+            currentUtcs?.TrySetResult(true);
         }
 
         /// <summary>
@@ -71,9 +72,9 @@ namespace ChainPattern
         /// <summary>
         /// Sets whether this Chain will be skipped immediately after starting
         /// </summary>
-        public void SetIsWillSkip(bool willSkip)
+        public void SetIsFastForward(bool fastForward)
         {
-            isWillSkip = willSkip;
+            isFastForward = fastForward;
         }
 
         /// <summary>
@@ -88,13 +89,13 @@ namespace ChainPattern
             state = State.Completed;
             onComplete?.Invoke();
             onComplete = null;
-            currentTcs?.TrySetResult(true);
+            currentUtcs?.TrySetResult(true);
         }
 
         /// <summary>
         /// Indicates whether this Chain will be skipped immediately after Start
         /// </summary>
-        protected bool isWillSkip
+        protected bool isFastForward
         {
             get;
             private set;

@@ -24,8 +24,9 @@ namespace Sample
         /// </summary>
         protected override void StartInternal()
         {
-            if (targetButton == null)
+            if (isFastForward || targetButton == null)
             {
+                // Do nothing if it will be skipped immediately
                 Complete();
                 return;
             }

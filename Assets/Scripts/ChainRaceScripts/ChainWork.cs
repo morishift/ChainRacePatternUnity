@@ -2,7 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace ChainPattern
 {
@@ -24,16 +26,17 @@ namespace ChainPattern
         /// </summary>
         public event Action onUpdate;
 
+        CancellationTokenSource cts;
         bool isStarted;
 
         public ChainWork()
-        {            
+        {
         }
 
         /// <summary>
         /// Indicates whether the work will be skipped
         /// </summary>
-        public bool isWorkWillSkip => isWillSkip;
+        public bool isWorkWillSkip => isFastForward;
 
         /// <summary>
         /// Ends the work execution
@@ -42,8 +45,8 @@ namespace ChainPattern
         {
             if (isStarted)
             {
+                cts?.Cancel();
                 isStarted = false;
-                CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdate);
                 Complete();
             }
         }
@@ -54,8 +57,9 @@ namespace ChainPattern
         protected override void StartInternal()
         {
             isStarted = true;
-            CustomUpdateComponent.AddUpdateListener(OnCustomUpdate);
+            cts = new CancellationTokenSource();
             onStart?.Invoke();
+            FrameLoopAsync(cts.Token).Forget();
         }
 
         /// <summary>
@@ -64,18 +68,34 @@ namespace ChainPattern
         protected override void SkipInternal()
         {
             isStarted = false;
-            CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdate);
+            cts?.Cancel();
             onSkip?.Invoke();
         }
 
         /// <summary>
-        /// Called every frame after ChainWork starts
+        /// Execute FrameLoop
         /// </summary>
-        private void OnCustomUpdate()
+        private async UniTask FrameLoopAsync(CancellationToken token)
         {
-            onUpdate?.Invoke();
+            try
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    await UniTask.Yield(PlayerLoopTiming.Update, token);
+                    onUpdate?.Invoke();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Executed when canceled                
+            }
+            finally
+            {
+                // Dispose of resources after completion or cancellation
+                cts?.Dispose();
+                cts = null;
+            }
         }
     }
 }
-
 

@@ -1,7 +1,7 @@
-
+﻿
+using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ChainPattern
@@ -12,14 +12,14 @@ namespace ChainPattern
     public class ChainDelay : Chain
     {
         float delaySeconds;
-        float endTime;        
+        CancellationTokenSource cts;
 
         /// <summary>
         /// Creates a delay chain with duration in seconds
         /// </summary>
         public ChainDelay(float seconds)
         {
-            delaySeconds = seconds;
+            delaySeconds = seconds;            
         }
 
         /// <summary>
@@ -27,13 +27,14 @@ namespace ChainPattern
         /// </summary>
         protected override void StartInternal()
         {
-            if (isWillSkip)
+            if (isFastForward)
             {
                 // Do nothing if it will be skipped immediately
+                Complete();
                 return;
             }
-            endTime = Time.time + delaySeconds;
-            CustomUpdateComponent.AddUpdateListener(OnCustomUpdate);
+            cts = new CancellationTokenSource();
+            DelayAsync(cts.Token).Forget();
         }
 
         /// <summary>
@@ -41,18 +42,31 @@ namespace ChainPattern
         /// </summary>
         protected override void SkipInternal()
         {
-            CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdate);
+            if (cts != null && !cts.IsCancellationRequested)
+            {
+                cts.Cancel();
+            }
         }
 
         /// <summary>
-        /// Called every frame by CustomUpdateComponent
+        /// Execute UniTask.Delay
         /// </summary>
-        private void OnCustomUpdate()
-        {            
-            if (endTime <= Time.time)
+        private async UniTask DelayAsync(CancellationToken token)
+        {
+            try
             {                
-                CustomUpdateComponent.RemoveUpdateListener(OnCustomUpdate);
+                await UniTask.Delay((int)(delaySeconds * 1000), cancellationToken: token);
                 Complete();
+            }
+            catch (OperationCanceledException)
+            {
+                // Executed when canceled                
+            }
+            finally
+            {
+                // Dispose of resources after completion or cancellation
+                cts?.Dispose();
+                cts = null;
             }
         }
     }

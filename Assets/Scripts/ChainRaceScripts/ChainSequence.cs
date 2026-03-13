@@ -52,7 +52,7 @@ namespace ChainPattern
                 chainList.RemoveAt(0);
                 bool complete = false;
                 c.SetCompleteCallback(() => complete = true);
-                c.SetIsWillSkip(true);
+                c.SetIsFastForward(true);
                 c.Start();
                 if (!complete)
                 {
@@ -75,7 +75,7 @@ namespace ChainPattern
             }
             currentChain = chainList[0];
             chainList.RemoveAt(0);
-            currentChain.SetIsWillSkip(isWillSkip);
+            currentChain.SetIsFastForward(isFastForward);
             currentChain.SetCompleteCallback(() =>
             {
                 currentChain = null;

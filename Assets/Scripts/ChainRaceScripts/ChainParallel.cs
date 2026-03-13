@@ -39,7 +39,7 @@ namespace ChainPattern
             {
                 startedChainList.Add(chain);
                 chain.SetCompleteCallback(() => OnChainComplete(chain));
-                chain.SetIsWillSkip(isWillSkip);
+                chain.SetIsFastForward(isFastForward);
                 chain.Start();
             }
             else
@@ -61,7 +61,7 @@ namespace ChainPattern
                 chainList.RemoveAt(0);
                 startedChainList.Add(c);
                 c.SetCompleteCallback(() => OnChainComplete(c));
-                c.SetIsWillSkip(isWillSkip);                
+                c.SetIsFastForward(isFastForward);                
                 c.Start();
             }
             if (isEnabled)
@@ -120,7 +120,7 @@ namespace ChainPattern
                 chainList.RemoveAt(0);
                 bool complete = false;
                 c.SetCompleteCallback(() => complete = true);
-                c.SetIsWillSkip(true);
+                c.SetIsFastForward(true);
                 c.Start();
                 if (!complete)
                 {

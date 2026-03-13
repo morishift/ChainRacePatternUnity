@@ -26,11 +26,11 @@ namespace ChainPattern
         }
 
         /// <summary>
-        /// Creates a Chain that executes an action which takes isWillSkip as a parameter
+        /// Creates a Chain that executes an action which takes isFastForward as a parameter
         /// </summary>        
         public ChainAction(Action<bool> action)
         { 
-            actionToCall = () => action?.Invoke(isWillSkip);
+            actionToCall = () => action?.Invoke(isFastForward);
         }
         
         /// <summary>
