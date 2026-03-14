@@ -36,7 +36,7 @@ namespace ChainPattern
         /// <summary>
         /// Indicates whether the work will be skipped
         /// </summary>
-        public bool isWorkWillSkip => isFastForward;
+        public bool isWorkFastForward => isFastForward;
 
         /// <summary>
         /// Ends the work execution

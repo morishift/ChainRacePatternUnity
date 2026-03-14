@@ -11,14 +11,20 @@ namespace ChainPattern
     {
         List<Chain> chainList = new List<Chain>();
         List<Chain> startedChainList = new List<Chain>();
-        bool isEnabled;
-        bool isStarting;
-        bool isStarted;
-        bool isConsuming;
+
+        enum RaceState
+        {
+            Ready,
+            Starting,
+            Started,
+            Consuming,
+            Finished,
+        }
+        RaceState raceState;
 
         public ChainRace(params Chain[] chains)
         {
-            isEnabled = true;
+            raceState = RaceState.Ready;
             chainList.AddRange(chains);
         }
 
@@ -27,15 +33,11 @@ namespace ChainPattern
         /// </summary>
         public ChainRace Add(Chain chain)
         {
-            if (!isEnabled)
+            if (raceState == RaceState.Finished)
             {
                 // Ignore
             }
-            else if (isStarting || isConsuming)
-            {
-                chainList.Add(chain);
-            }
-            else if (isStarted)
+            else if (raceState == RaceState.Started)
             {
                 startedChainList.Add(chain);
                 chain.SetCompleteCallback(() => OnChainComplete(chain));
@@ -44,6 +46,9 @@ namespace ChainPattern
             }
             else
             {
+                // For all states except Started/Finished, queue into pending list
+                // During Consuming, Add() may still happen reentrantly from chains being skipped.
+                // Queue it into chainList so it will also be consumed in this pass.
                 chainList.Add(chain);
             }
             return this;
@@ -54,20 +59,19 @@ namespace ChainPattern
         /// </summary>
         protected override void StartInternal()
         {
-            isStarting = true;
-            while (chainList.Count > 0 && isEnabled)
+            raceState = RaceState.Starting;
+            while (chainList.Count > 0 && raceState == RaceState.Starting)
             {
                 Chain c = chainList[0];
                 chainList.RemoveAt(0);
                 startedChainList.Add(c);
                 c.SetCompleteCallback(() => OnChainComplete(c));
-                c.SetIsFastForward(isFastForward);                
+                c.SetIsFastForward(isFastForward);
                 c.Start();
             }
-            if (isEnabled)
+            if (raceState == RaceState.Starting)
             {
-                isStarting = false;
-                isStarted = true;
+                raceState = RaceState.Started;
             }
         }
 
@@ -76,12 +80,9 @@ namespace ChainPattern
         /// </summary>
         protected override void SkipInternal()
         {
-            isConsuming = true;
+            raceState = RaceState.Consuming;
             ConsumeStartedAndPendingChains();
-            isEnabled = false;
-            isStarting = false;
-            isStarted = false;
-            isConsuming = false;
+            raceState = RaceState.Finished;
         }
 
         /// <summary>
@@ -92,12 +93,9 @@ namespace ChainPattern
             if (startedChainList.Contains(chain))
             {
                 startedChainList.Remove(chain);
-                isConsuming = true;
+                raceState = RaceState.Consuming;
                 ConsumeStartedAndPendingChains();
-                isEnabled = false;
-                isStarting = false;
-                isStarted = false;
-                isConsuming = false;
+                raceState = RaceState.Finished;
                 Complete();
             }
         }

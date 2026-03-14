@@ -40,7 +40,7 @@ namespace Sample
             });
             testButtons.AddButton("Set player number", () =>
             {
-                resultDialog.UpdatePlayerNumber(3);
+                resultDialog.UpdatePlayerNumber(5);
                 resultDialog.ChainShowRankingPlayers().Start();
             });
             testButtons.AddButton("ChainPointAnimation ", () =>

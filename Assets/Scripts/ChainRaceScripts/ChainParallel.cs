@@ -11,14 +11,20 @@ namespace ChainPattern
     {
         List<Chain> chainList = new List<Chain>();
         List<Chain> startedChainList = new List<Chain>();
-        bool isEnabled;
-        bool isStarting;
-        bool isStarted;
-        bool isConsuming;
+
+        enum ParallelState
+        {
+            Ready,
+            Starting,
+            Started,
+            Consuming,
+            Finished,
+        }
+        ParallelState parallelState;
 
         public ChainParallel(params Chain[] chains)
         {
-            isEnabled = true;
+            parallelState = ParallelState.Ready;
             chainList.AddRange(chains);
         }
 
@@ -27,15 +33,11 @@ namespace ChainPattern
         /// </summary>        
         public ChainParallel Add(Chain chain)
         {
-            if (!isEnabled)
+            if (parallelState == ParallelState.Finished)
             {
                 // Ignore
             }
-            else if (isStarting || isConsuming)
-            {
-                chainList.Add(chain);
-            }
-            else if (isStarted)
+            else if (parallelState == ParallelState.Started)
             {
                 startedChainList.Add(chain);
                 chain.SetCompleteCallback(() => OnChainComplete(chain));
@@ -44,6 +46,9 @@ namespace ChainPattern
             }
             else
             {
+                // For all states except Started/Finished, queue into pending list
+                // During Consuming, Add() may still happen reentrantly from chains being skipped.
+                // Queue it into chainList so it will also be consumed in this pass.
                 chainList.Add(chain);
             }
             return this;
@@ -54,20 +59,19 @@ namespace ChainPattern
         /// </summary>
         protected override void StartInternal()
         {
-            isStarting = true;
-            while (chainList.Count > 0 && isEnabled)
+            parallelState = ParallelState.Starting;
+            while (chainList.Count > 0 && parallelState == ParallelState.Starting)
             {
                 Chain c = chainList[0];
                 chainList.RemoveAt(0);
                 startedChainList.Add(c);
                 c.SetCompleteCallback(() => OnChainComplete(c));
-                c.SetIsFastForward(isFastForward);                
+                c.SetIsFastForward(isFastForward);
                 c.Start();
             }
-            if (isEnabled)
+            if (parallelState == ParallelState.Starting)
             {
-                isStarting = false;
-                isStarted = true;
+                parallelState = ParallelState.Started;
             }
         }
 
@@ -76,12 +80,9 @@ namespace ChainPattern
         /// </summary>
         protected override void SkipInternal()
         {
-            isConsuming = true;
+            parallelState = ParallelState.Consuming;
             ConsumeStartedAndPendingChains();
-            isEnabled = false;
-            isStarting = false;
-            isStarted = false;
-            isConsuming = false;
+            parallelState = ParallelState.Finished;
         }
 
         /// <summary>
@@ -94,10 +95,7 @@ namespace ChainPattern
                 startedChainList.Remove(chain);
                 if (chainList.Count <= 0 && startedChainList.Count <= 0)
                 {
-                    isEnabled = false;
-                    isStarting = false;
-                    isStarted = false;
-                    isConsuming = false;
+                    parallelState = ParallelState.Finished;
                     Complete();
                 }
             }

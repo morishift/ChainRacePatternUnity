@@ -13,7 +13,7 @@ namespace ChainPattern
     /// </summary>
     public abstract class Chain
     {
-        enum State
+        enum ChainState
         {
             Ready,
             Started,
@@ -22,12 +22,12 @@ namespace ChainPattern
         }
 
         UniTaskCompletionSource<bool> currentUtcs;
-        State state;        
+        ChainState chainState;
         Action onComplete;
 
         public Chain()
         {
-            state = State.Ready;
+            chainState = ChainState.Ready;
         }
 
         /// <summary>
@@ -35,13 +35,13 @@ namespace ChainPattern
         /// </summary>
         public UniTask Start()
         {
-            if (state != State.Ready)
+            if (chainState != ChainState.Ready)
             {
                 // If already started, return the existing task to wait for it
                 return currentUtcs?.Task ?? UniTask.CompletedTask;
             }
             currentUtcs = new UniTaskCompletionSource<bool>();
-            state = State.Started;
+            chainState = ChainState.Started;
             StartInternal();
             return currentUtcs.Task;
         }
@@ -51,11 +51,11 @@ namespace ChainPattern
         /// </summary>
         public void Skip()
         {
-            if (state != State.Started)
+            if (chainState != ChainState.Started)
             {
                 return;
             }
-            state = State.Skipped;
+            chainState = ChainState.Skipped;
             onComplete = null; // Don't call completion callback when skipped
             SkipInternal();            
             currentUtcs?.TrySetResult(true);
@@ -82,11 +82,11 @@ namespace ChainPattern
         /// </summary>
         protected void Complete()
         {
-            if (state != State.Started)
+            if (chainState != ChainState.Started)
             {
                 return;
             }
-            state = State.Completed;
+            chainState = ChainState.Completed;
             onComplete?.Invoke();
             onComplete = null;
             currentUtcs?.TrySetResult(true);
