@@ -1,10 +1,12 @@
 using ChainPattern;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace Sample
 {
@@ -24,6 +26,12 @@ namespace Sample
         [SerializeField]
         RankingPlayer sourceRankingPlayer;
         /// <summary>
+        /// Animator for animating the dialog
+        /// </summary>
+        [SerializeField]
+        public Animator animator;
+
+        /// <summary>
         /// Instances of RankingPlayer
         /// </summary>
         public List<RankingPlayer> rankingPlayers = new List<RankingPlayer>();
@@ -34,8 +42,9 @@ namespace Sample
         /// <summary>
         /// Offset amount for the starting position when the RankingPlayer is displayed
         /// </summary>
-        readonly Vector2 rankingPlayerOffset = new Vector2(0.0f, -400.0f);
-        
+        readonly Vector2 rankingPlayerOffset1 = new Vector2(0.0f, -600.0f);
+        readonly Vector2 rankingPlayerOffset2 = new Vector2(0.0f, 600.0f);
+
         private void Awake()
         {
             sourceRankingPlayer.gameObject.SetActive(false);
@@ -67,7 +76,7 @@ namespace Sample
             // Force update the layout to get the correct positions
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(rankingVerticalLayoutGroup.GetComponent<RectTransform>());
-            
+
             // Save positions
             foreach (RankingPlayer r in rankingPlayers)
             {
@@ -75,23 +84,47 @@ namespace Sample
                 Debug.Log($"{rankingPlayerAnchoredPositions.Count}:({position.x}, {position.y})");
                 rankingPlayerAnchoredPositions.Add(r.GetComponent<RectTransform>().anchoredPosition);
                 // add offset
-                r.GetComponent<RectTransform>().anchoredPosition += rankingPlayerOffset;
+                r.GetComponent<RectTransform>().anchoredPosition += rankingPlayerOffset1;
             }
-            rankingVerticalLayoutGroup.enabled = false;           
+            rankingVerticalLayoutGroup.enabled = false;
+        }
+
+        /// <summary>
+        /// Show the dialog with animation and displaying RankingPlayers
+        /// </summary>
+        public Chain ChainShowDialog()
+        {
+            return new ChainParallel(
+                ChainRankingPlayers(true),
+                new ChainAnimator(animator, "ResultDialogShowAnim")
+            );
+        }
+
+        /// <summary>
+        /// Show the dialog with animation and displaying RankingPlayers
+        /// </summary>
+        public Chain ChainHideDialog()
+        {
+            return new ChainParallel(
+                ChainRankingPlayers(false),
+                new ChainAnimator(animator, "ResultDialogHideAnim")
+            );
         }
 
         /// <summary>
         /// Create a chain to display RankingPlayers
         /// </summary>
-        public Chain ChainShowRankingPlayers()
+        public Chain ChainRankingPlayers(bool show)
         {
             var parallel = new ChainParallel();
             var curve = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
             for (int i = 0; i < rankingPlayers.Count; ++i)
             {
+                RectTransform rectTransform = rankingPlayers[i].GetComponent<RectTransform>();
+                Vector2 endPosition = show ? rankingPlayerAnchoredPositions[i] : rankingPlayerAnchoredPositions[i] + rankingPlayerOffset2;
                 parallel.Add(new ChainSequence(
                     new ChainDelay(0.25f * i),
-                    Utility.ChainMoveTween(rankingPlayers[i].GetComponent<RectTransform>(), rankingPlayerAnchoredPositions[i], 0.7f, curve)
+                    Utility.ChainMoveTween(rectTransform, endPosition, 0.7f, curve)
                 ));
             }
             return parallel;

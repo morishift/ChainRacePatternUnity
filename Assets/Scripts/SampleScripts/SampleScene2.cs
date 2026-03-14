@@ -38,15 +38,54 @@ namespace Sample
             {
                 fadePanel.ChainFade(false).Start();
             });
-            testButtons.AddButton("Set player number", () =>
+            testButtons.AddButton("Show", () =>
             {
                 resultDialog.UpdatePlayerNumber(5);
-                resultDialog.ChainShowRankingPlayers().Start();
+                //resultDialog.ChainRankingPlayers(true).Start();
+                resultDialog.ChainShowDialog().Start();
             });
-            testButtons.AddButton("ChainPointAnimation ", () =>
+            testButtons.AddButton("Hide", () =>
             {
-                resultDialog.rankingPlayers[0].ChainPointAnimation(100).Start();
+                //resultDialog.ChainRankingPlayers(false).Start();
+                resultDialog.ChainHideDialog().Start();
             });
+
+            testButtons.AddButton("AnimTest", () =>
+            {
+                new ChainRace(
+                    new ChainButton(skipButton),                    
+                    new ChainSequence(                        
+                        new ChainAnimator(resultDialog.animator, "ResultDialogShowAnim"),
+                        new ChainAnimator(resultDialog.animator, "ResultDialogHideAnim")
+                    )
+                ).Start();
+            });
+
+            testButtons.AddButton("All", () =>
+            {
+                resultDialog.UpdatePlayerNumber(5);
+                //new ChainSequence(
+                //    new ChainRace(
+                //        new ChainButton(skipButton),
+                //        resultDialog.ChainShowDialog()
+                //    ),
+                //    new ChainRace(
+                //        new ChainButton(skipButton),
+                //        resultDialog.ChainHideDialog()
+                //    ),
+                //    new ChainNop()
+                //).Start();
+                new ChainSequence(
+                    new ChainRace(
+                        new ChainButton(skipButton),
+                        new ChainSequence(
+                            resultDialog.ChainShowDialog(),
+                            resultDialog.ChainHideDialog()
+                        )
+                    )
+                ).Start();
+            });
+
             skipButton = testButtons.AddButton("Skip");
             skipButton.interactable = false;
         }
