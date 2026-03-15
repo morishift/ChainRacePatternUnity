@@ -68,14 +68,15 @@ namespace Sample
                 new ChainAction(() =>
                 {
                     fadePanel.gameObject.SetActive(true);
-                    fadePanel.SetAlpha(1.0f);                    
+                    fadePanel.SetAlpha(1.0f);
                     resultDialog.SetPanelInitialPosition();
                 }),
                 new ChainDelay(0.5f),
                 new ChainRace(
                     new ChainSequence(
                         new ChainDelay(0.1f),
-                        new ChainButton(screenButton)
+                        new ChainButton(screenButton),
+                        Utility.ChainPlaySound(SoundType.Pong4)
                     ),
                     new ChainParallel(
                         fadePanel.ChainFade(false),
@@ -86,16 +87,19 @@ namespace Sample
                     )
                 ),
                 new ChainRace(
-                    new ChainButton(screenButton),
+                    new ChainSequence(
+                        new ChainButton(screenButton),
+                        Utility.ChainPlaySound(SoundType.Pong4)
+                    ),                    
                     resultDialog.ChainShowBonus()
                 ),
-                ChainTouchScreen(),                
+                ChainTouchScreen(),
                 new ChainParallel(
                     resultDialog.ChainHideDialog(),
                     new ChainSequence(
-                        new ChainDelay(0.3f + playerInfos.Length * 0.1f), 
+                        new ChainDelay(0.3f + playerInfos.Length * 0.1f),
                         fadePanel.ChainFade(true)
-                    )                    
+                    )
                 )
             );
         }
@@ -111,6 +115,7 @@ namespace Sample
                     touchScreen.SetActive(true);
                 }),
                 new ChainButton(screenButton),
+                Utility.ChainPlaySound(SoundType.Pong4),
                 new ChainAction(() =>
                 {
                     touchScreen.SetActive(false);
