@@ -74,9 +74,9 @@ namespace Sample
                 new ChainDelay(0.5f),
                 new ChainRace(
                     new ChainSequence(
-                        new ChainDelay(0.1f),
+                        new ChainDelay(0.1f), // Prevent skipping immediately after the start
                         new ChainButton(screenButton),
-                        Utility.ChainPlaySound(SoundType.Pong4)
+                        Utility.ChainPlaySound(SoundType.Pong4) // Button press sound effect
                     ),
                     new ChainParallel(
                         fadePanel.ChainFade(false),
