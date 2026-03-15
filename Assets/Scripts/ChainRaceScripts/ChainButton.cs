@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ChainPattern;
 
-namespace Sample
+namespace ChainPattern
 {
     /// <summary>
     /// Chain that completes when a button is clicked
