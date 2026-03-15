@@ -27,7 +27,10 @@ namespace Sample
             work.onUpdate += () =>
             {
                 float t = curve.Evaluate((Time.time - startTime) / duration);
-                rect.anchoredPosition = Vector2.Lerp(startPosition, endPosition, t);
+                if (rect != null)
+                {
+                    rect.anchoredPosition = Vector2.Lerp(startPosition, endPosition, t);
+                }
                 if (t >= 1.0f)
                 {
                     work.End();
