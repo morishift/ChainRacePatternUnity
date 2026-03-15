@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using ChainPattern;
+using UnityEngine.Experimental.AI;
 
 namespace Sample
 {
@@ -12,12 +13,39 @@ namespace Sample
     public class RankingPlayer : MonoBehaviour
     {
         [SerializeField]
+        TextMeshProUGUI textName;
+        [SerializeField]
         TextMeshProUGUI textPoint;
+        [SerializeField]
+        Animator animator;
         int playerPoint = 0;
 
         private void Awake()
         {
             textPoint.text = "0pt";
+        }
+
+        /// <summary>
+        /// set player name to display
+        /// </summary>
+        public void SetPlayerName(string playerName)
+        { 
+            textName.text = playerName;
+        }
+
+        /// <summary>
+        /// show the bonus animation and update the point text area to end
+        /// </summary>        
+        public Chain ChainBonus(int totalPointAfterBonus)
+        {            
+            return new ChainParallel(
+                new ChainAnimator(animator, "ResultPlayerAnimBonus"),
+                new ChainSequence(
+                    new ChainDelay(0.3f),
+                    Utility.ChainPlaySound(SoundType.Pong2),
+                    ChainPointAnimation(totalPointAfterBonus)
+                )
+            );
         }
 
         /// <summary>

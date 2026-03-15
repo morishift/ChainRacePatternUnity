@@ -85,7 +85,7 @@ namespace ChainPattern
             if (chainState != ChainState.Started)
             {
                 return;
-            }
+            }            
             chainState = ChainState.Completed;
             onComplete?.Invoke();
             onComplete = null;
