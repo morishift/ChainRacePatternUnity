@@ -14,96 +14,33 @@ namespace Sample
     {
         [SerializeField]
         PlayerInfo[] playerInfos;
-
         [SerializeField]
-        TestButtons testButtons;
+        ResultDialog resultDialog;
+        [SerializeField]
+        GameObject touchScreen;
+        [SerializeField]
+        Button screenButton;
+
         [SerializeField]
         FadePanel fadePanel;
         [SerializeField]
-        ResultDialog resultDialog;
+        TestButtons testButtons;
         List<Button> sequenceButtons = new List<Button>();
-        Button skipButton;
-        ChainSequence chainSequence;
-        
+        Button startButton;
 
         void Start()
         {
-            //sequenceButtons.Add(testButtons.AddButton("Sequence1", OnClickSequence1Button));
-            //sequenceButtons.Add(testButtons.AddButton("Sequence2", OnClickSequence2Button));
-            //sequenceButtons.Add(testButtons.AddButton("Sequence3", OnClickSequence3Button));
-
-            //testButtons.AddButton("FadeIn", () =>
-            //{
-            //    fadePanel.ChainFade(true).Start();
-            //});
-            //testButtons.AddButton("FadeOut", () =>
-            //{
-            //    fadePanel.ChainFade(false).Start();
-            //});
-            //testButtons.AddButton("Show", () =>
-            //{
-            //    resultDialog.UpdatePlayerNumber(5);
-            //    //resultDialog.ChainRankingPlayers(true).Start();
-            //    resultDialog.ChainShowDialog().Start();
-            //});
-            //testButtons.AddButton("SetPlayerInfos", () =>
-            //{
-            //    //resultDialog.SetPlayerInfos(playerInfos);
-            //    //resultDialog.ChainRankingPlayers(true).Start();
-            //});
-
-            //testButtons.AddButton("AnimTest", () =>
-            //{
-            //    new ChainRace(
-            //        new ChainButton(skipButton),                    
-            //        new ChainSequence(                        
-            //            new ChainAnimator(resultDialog.animator, "ResultDialogShowAnim"),
-            //            new ChainAnimator(resultDialog.animator, "ResultDialogHideAnim")
-            //        )
-            //    ).Start();
-            //});
-
-            //testButtons.AddButton("All", () =>
-            //{
-            //    resultDialog.UpdatePlayerNumber(5);
-            //    //new ChainSequence(
-            //    //    new ChainRace(
-            //    //        new ChainButton(skipButton),
-            //    //        resultDialog.ChainShowDialog()
-            //    //    ),
-            //    //    new ChainRace(
-            //    //        new ChainButton(skipButton),
-            //    //        resultDialog.ChainHideDialog()
-            //    //    ),
-            //    //    new ChainNop()
-            //    //).Start();
-            //    new ChainSequence(
-            //        new ChainRace(
-            //            new ChainButton(skipButton),
-            //            new ChainSequence(
-            //                resultDialog.ChainShowDialog(),
-            //                resultDialog.ChainHideDialog()
-            //            )
-            //        )
-            //    ).Start();
-            //});
-
-            testButtons.AddButton("All", async () =>
-            {
+            startButton = testButtons.AddButton("Start", async () =>
+            {                
                 resultDialog.SetPlayerInfos(playerInfos);
-                await ChainResult().Start();
-                //resultDialog.SetPlayerInfos(playerInfos);
-                //resultDialog.ChainRankingPlayers(true).Start();
+                Chain chainResult = ChainResult();                
+                await new ChainSequence(
+                    new ChainAction(() => startButton.interactable = false),
+                    chainResult,
+                    new ChainAction(() => startButton.interactable = true)
+                ).Start();
             });
-
-            testButtons.AddButton("SetPanelInitialPosition", () =>
-            {
-                resultDialog.SetPanelInitialPosition();
-            });
-
-
-            skipButton = testButtons.AddButton("Skip");
-            skipButton.interactable = false;
+            touchScreen.SetActive(false);
         }
 
 
@@ -136,7 +73,10 @@ namespace Sample
                 }),
                 new ChainDelay(0.5f),
                 new ChainRace(
-                    new ChainButton(skipButton),
+                    new ChainSequence(
+                        new ChainDelay(0.1f),
+                        new ChainButton(screenButton)
+                    ),
                     new ChainParallel(
                         fadePanel.ChainFade(false),
                         new ChainSequence(
@@ -146,14 +86,35 @@ namespace Sample
                     )
                 ),
                 new ChainRace(
-                    new ChainButton(skipButton),
+                    new ChainButton(screenButton),
                     resultDialog.ChainShowBonus()
                 ),
-                new ChainRace(
-                    new ChainButton(skipButton),
-                    resultDialog.ChainHideDialog()
-                ),
-                fadePanel.ChainFade(true)
+                ChainTouchScreen(),                
+                new ChainParallel(
+                    resultDialog.ChainHideDialog(),
+                    new ChainSequence(
+                        new ChainDelay(0.3f + playerInfos.Length * 0.1f), 
+                        fadePanel.ChainFade(true)
+                    )                    
+                )
+            );
+        }
+
+        /// <summary>
+        /// show the touch screen and wait until the screen button is pressed, then hide the touch screen
+        /// </summary>
+        private Chain ChainTouchScreen()
+        { 
+            return new ChainSequence(
+                new ChainAction(() =>
+                {
+                    touchScreen.SetActive(true);
+                }),
+                new ChainButton(screenButton),
+                new ChainAction(() =>
+                {
+                    touchScreen.SetActive(false);
+                })
             );
         }
     }
