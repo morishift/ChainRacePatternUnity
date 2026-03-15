@@ -129,36 +129,44 @@ namespace Sample
             );
         }
 
-        ///// <summary>
-        ///// Show the dialog with animation and displaying RankingPlayers
-        ///// </summary>
-        //public Chain ChainHideDialog()
-        //{
-        //    return new ChainParallel(
-        //        ChainRankingPlayers(false),
-        //        new ChainAction(() => animator.speed = 1.0f),
-        //        new ChainAnimator(animator, "ResultDialogHideAnim")
-        //    );
-        //}
+        /// <summary>
+        /// show bonus point animation for each player
+        /// </summary>
+        /// <returns></returns>
+        public Chain ChainShowBonus()
+        { 
+            ChainParallel parallel = new ChainParallel();
+            int index = 0;
+            for (int i = 0; i < playerInfos.Length; ++i)
+            {
+                if (playerInfos[i].bonus <= 0)
+                {
+                    continue;
+                }
+                parallel.Add(
+                    new ChainSequence(
+                        new ChainDelay(0.25f * index),
+                        rankingPlayers[i].ChainBonus(playerInfos[i].score + playerInfos[i].bonus)
+                    )
+                );
+                ++index;
+            }
+            return parallel;
+        }
 
-        ///// <summary>
-        ///// Create a chain to display RankingPlayers
-        ///// </summary>
-        //public Chain ChainRankingPlayers(bool show)
-        //{
-        //    var parallel = new ChainParallel();
-        //    var curve = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
-        //    for (int i = 0; i < rankingPlayers.Count; ++i)
-        //    {
-        //        RectTransform rectTransform = rankingPlayers[i].GetComponent<RectTransform>();
-        //        Vector2 endPosition = show ? rankingPlayerAnchoredPositions[i] : rankingPlayerAnchoredPositions[i] + rankingPlayerOffset2;
-        //        parallel.Add(new ChainSequence(
-        //            new ChainDelay(0.25f * i),
-        //            Utility.ChainMoveTween(rectTransform, endPosition, 0.7f, curve)
-        //        ));
-        //    }
-        //    return parallel;
-        //}
+        /// <summary>
+        /// Show the dialog with animation and displaying RankingPlayers
+        /// </summary>
+        public Chain ChainHideDialog()
+        {
+            return new ChainParallel(
+                new ChainAnimator(animator, "ResultDialogHideAnim"),
+                new ChainSequence(
+                    new ChainDelay(0.25f),
+                    ChainHideRankingPlayers()
+                )
+            );
+        }
 
         /// <summary>
         /// Create a chain to display RankingPlayers
@@ -192,6 +200,31 @@ namespace Sample
             }
             return parallel;
         }
+
+
+        /// <summary>
+        /// Create a chain to hide RankingPlayers
+        /// </summary>
+        public Chain ChainHideRankingPlayers()
+        {
+            var parallel = new ChainParallel();
+            var curve = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
+            for (int i = 0; i < rankingPlayers.Count; ++i)
+            {
+                RankingPlayer rankingPlayer = rankingPlayers[i];
+                RectTransform rectTransform = rankingPlayer.GetComponent<RectTransform>();
+                Vector2 endPosition = rankingPlayerAnchoredPositions[i] + rankingPlayerOffset2;
+                parallel.Add(
+                    new ChainSequence(
+                        new ChainDelay(0.1f * i),
+                        Utility.ChainMoveTween(rectTransform, endPosition, 0.7f, curve)
+                    )
+                );
+            }
+            return parallel;
+        }
+
+
     }
 }
 

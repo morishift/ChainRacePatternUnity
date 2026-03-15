@@ -88,13 +88,10 @@ namespace Sample
             //    ).Start();
             //});
 
-            testButtons.AddButton("All", () =>
+            testButtons.AddButton("All", async () =>
             {
                 resultDialog.SetPlayerInfos(playerInfos);
-                new ChainRace(
-                    new ChainButton(skipButton),
-                    ChainResult()
-                ).Start();
+                await ChainResult().Start();
                 //resultDialog.SetPlayerInfos(playerInfos);
                 //resultDialog.ChainRankingPlayers(true).Start();
             });
@@ -147,7 +144,16 @@ namespace Sample
                             resultDialog.ChainShowDialog()
                        )
                     )
-                )
+                ),
+                new ChainRace(
+                    new ChainButton(skipButton),
+                    resultDialog.ChainShowBonus()
+                ),
+                new ChainRace(
+                    new ChainButton(skipButton),
+                    resultDialog.ChainHideDialog()
+                ),
+                fadePanel.ChainFade(true)
             );
         }
     }

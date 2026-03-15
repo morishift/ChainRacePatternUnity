@@ -24,6 +24,7 @@ namespace Sample
     {
         public string name = "";
         public int score = 0;
+        public int bonus = 0;
     }
 
 }
