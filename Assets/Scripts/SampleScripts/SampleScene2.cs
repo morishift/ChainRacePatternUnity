@@ -25,15 +25,15 @@ namespace Sample
         FadePanel fadePanel;
         [SerializeField]
         TestButtons testButtons;
-        List<Button> sequenceButtons = new List<Button>();
+
         Button startButton;
 
         void Start()
         {
             startButton = testButtons.AddButton("Start", async () =>
-            {                
+            {
                 resultDialog.SetPlayerInfos(playerInfos);
-                Chain chainResult = ChainResult();                
+                Chain chainResult = ChainResult();
                 await new ChainSequence(
                     new ChainAction(() => startButton.interactable = false),
                     chainResult,
@@ -41,21 +41,6 @@ namespace Sample
                 ).Start();
             });
             touchScreen.SetActive(false);
-        }
-
-
-        /// <summary>
-        /// Enables or disables the sequence buttons        
-        /// </summary>
-        private Chain ChainSetButtonsEnabled(bool enabed)
-        {
-            return new ChainAction(() =>
-            {
-                foreach (Button button in sequenceButtons)
-                {
-                    button.interactable = enabed;
-                }
-            });
         }
 
         /// <summary>
@@ -90,7 +75,7 @@ namespace Sample
                     new ChainSequence(
                         new ChainButton(screenButton),
                         Utility.ChainPlaySound(SoundType.Pong4)
-                    ),                    
+                    ),
                     resultDialog.ChainShowBonus()
                 ),
                 ChainTouchScreen(),
@@ -108,7 +93,7 @@ namespace Sample
         /// show the touch screen and wait until the screen button is pressed, then hide the touch screen
         /// </summary>
         private Chain ChainTouchScreen()
-        { 
+        {
             return new ChainSequence(
                 new ChainAction(() =>
                 {
