@@ -45,9 +45,27 @@ namespace Sample
         readonly Vector2 rankingPlayerOffset1 = new Vector2(0.0f, -600.0f);
         readonly Vector2 rankingPlayerOffset2 = new Vector2(0.0f, 600.0f);
 
+        PlayerInfo[] playerInfos;
+
         private void Awake()
         {
             sourceRankingPlayer.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// set player information to display in the dialog. 
+        /// The number of playerInfos should be the same as the number of RankingPlayer instances created by UpdatePlayerNumber
+        /// </summary>
+        /// <param name="playerInfos"></param>
+        public void SetPlayerInfos(PlayerInfo[] playerInfos)
+        {
+            this.playerInfos = playerInfos;
+            UpdatePlayerNumber(playerInfos.Length);
+            // Set player names
+            for (int i = 0; i < playerInfos.Length; ++i)
+            {
+                rankingPlayers[i].SetPlayerName(playerInfos[i].name);
+            }
         }
 
         /// <summary>
@@ -90,42 +108,87 @@ namespace Sample
         }
 
         /// <summary>
+        /// set the initial position of the dialog and RankingPlayers according to the animation. 
+        /// This should be called before starting the animation chain to prevent the dialog from jumping at the beginning of the animation.
+        /// </summary>
+        public void SetPanelInitialPosition()
+        {
+            animator.Play("ResultDialogShowAnim", 0, 0.0f);
+            animator.Update(0.0f);
+            animator.speed = 0.0f; // Pause the animator to prevent it from playing automatically
+        }
+
+        /// <summary>
         /// Show the dialog with animation and displaying RankingPlayers
         /// </summary>
         public Chain ChainShowDialog()
         {
             return new ChainParallel(
-                ChainRankingPlayers(true),
+                ChainShowRankingPlayers(),
                 new ChainAnimator(animator, "ResultDialogShowAnim")
             );
         }
 
-        /// <summary>
-        /// Show the dialog with animation and displaying RankingPlayers
-        /// </summary>
-        public Chain ChainHideDialog()
-        {
-            return new ChainParallel(
-                ChainRankingPlayers(false),
-                new ChainAnimator(animator, "ResultDialogHideAnim")
-            );
-        }
+        ///// <summary>
+        ///// Show the dialog with animation and displaying RankingPlayers
+        ///// </summary>
+        //public Chain ChainHideDialog()
+        //{
+        //    return new ChainParallel(
+        //        ChainRankingPlayers(false),
+        //        new ChainAction(() => animator.speed = 1.0f),
+        //        new ChainAnimator(animator, "ResultDialogHideAnim")
+        //    );
+        //}
+
+        ///// <summary>
+        ///// Create a chain to display RankingPlayers
+        ///// </summary>
+        //public Chain ChainRankingPlayers(bool show)
+        //{
+        //    var parallel = new ChainParallel();
+        //    var curve = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
+        //    for (int i = 0; i < rankingPlayers.Count; ++i)
+        //    {
+        //        RectTransform rectTransform = rankingPlayers[i].GetComponent<RectTransform>();
+        //        Vector2 endPosition = show ? rankingPlayerAnchoredPositions[i] : rankingPlayerAnchoredPositions[i] + rankingPlayerOffset2;
+        //        parallel.Add(new ChainSequence(
+        //            new ChainDelay(0.25f * i),
+        //            Utility.ChainMoveTween(rectTransform, endPosition, 0.7f, curve)
+        //        ));
+        //    }
+        //    return parallel;
+        //}
 
         /// <summary>
         /// Create a chain to display RankingPlayers
         /// </summary>
-        public Chain ChainRankingPlayers(bool show)
+        public Chain ChainShowRankingPlayers()
         {
             var parallel = new ChainParallel();
             var curve = AnimationCurve.EaseInOut(0.0f, 0.0f, 1.0f, 1.0f);
             for (int i = 0; i < rankingPlayers.Count; ++i)
             {
-                RectTransform rectTransform = rankingPlayers[i].GetComponent<RectTransform>();
-                Vector2 endPosition = show ? rankingPlayerAnchoredPositions[i] : rankingPlayerAnchoredPositions[i] + rankingPlayerOffset2;
-                parallel.Add(new ChainSequence(
-                    new ChainDelay(0.25f * i),
-                    Utility.ChainMoveTween(rectTransform, endPosition, 0.7f, curve)
-                ));
+                RankingPlayer rankingPlayer = rankingPlayers[i];
+                RectTransform rectTransform = rankingPlayer.GetComponent<RectTransform>();
+                Vector2 endPosition = rankingPlayerAnchoredPositions[i];
+                int score = playerInfos[i].score;
+                parallel.Add(
+                    new ChainSequence(
+                        new ChainDelay(0.25f * i),
+                        new ChainParallel(
+                            Utility.ChainMoveTween(rectTransform, endPosition, 0.7f, curve),
+                            new ChainSequence(
+                                new ChainDelay(0.4f),
+                                Utility.ChainPlaySound(SoundType.Gao1)
+                            ), 
+                            new ChainSequence(
+                                new ChainDelay(0.5f),
+                                rankingPlayer.ChainPointAnimation(score)
+                            )
+                        )
+                    )
+                );
             }
             return parallel;
         }

@@ -12,12 +12,22 @@ namespace Sample
     public class RankingPlayer : MonoBehaviour
     {
         [SerializeField]
+        TextMeshProUGUI textName;
+        [SerializeField]
         TextMeshProUGUI textPoint;
         int playerPoint = 0;
 
         private void Awake()
         {
             textPoint.text = "0pt";
+        }
+
+        /// <summary>
+        /// set player name to display
+        /// </summary>
+        public void SetPlayerName(string playerName)
+        { 
+            textName.text = playerName;
         }
 
         /// <summary>

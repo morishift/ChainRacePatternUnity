@@ -13,12 +13,14 @@ namespace Sample
     public class SampleScene2 : MonoBehaviour
     {
         [SerializeField]
+        PlayerInfo[] playerInfos;
+
+        [SerializeField]
         TestButtons testButtons;
         [SerializeField]
         FadePanel fadePanel;
         [SerializeField]
         ResultDialog resultDialog;
-
         List<Button> sequenceButtons = new List<Button>();
         Button skipButton;
         ChainSequence chainSequence;
@@ -30,61 +32,78 @@ namespace Sample
             //sequenceButtons.Add(testButtons.AddButton("Sequence2", OnClickSequence2Button));
             //sequenceButtons.Add(testButtons.AddButton("Sequence3", OnClickSequence3Button));
 
-            testButtons.AddButton("FadeIn", () =>
-            {
-                fadePanel.ChainFade(true).Start();
-            });
-            testButtons.AddButton("FadeOut", () =>
-            {
-                fadePanel.ChainFade(false).Start();
-            });
-            testButtons.AddButton("Show", () =>
-            {
-                resultDialog.UpdatePlayerNumber(5);
-                //resultDialog.ChainRankingPlayers(true).Start();
-                resultDialog.ChainShowDialog().Start();
-            });
-            testButtons.AddButton("Hide", () =>
-            {
-                //resultDialog.ChainRankingPlayers(false).Start();
-                resultDialog.ChainHideDialog().Start();
-            });
+            //testButtons.AddButton("FadeIn", () =>
+            //{
+            //    fadePanel.ChainFade(true).Start();
+            //});
+            //testButtons.AddButton("FadeOut", () =>
+            //{
+            //    fadePanel.ChainFade(false).Start();
+            //});
+            //testButtons.AddButton("Show", () =>
+            //{
+            //    resultDialog.UpdatePlayerNumber(5);
+            //    //resultDialog.ChainRankingPlayers(true).Start();
+            //    resultDialog.ChainShowDialog().Start();
+            //});
+            //testButtons.AddButton("SetPlayerInfos", () =>
+            //{
+            //    //resultDialog.SetPlayerInfos(playerInfos);
+            //    //resultDialog.ChainRankingPlayers(true).Start();
+            //});
 
-            testButtons.AddButton("AnimTest", () =>
-            {
-                new ChainRace(
-                    new ChainButton(skipButton),                    
-                    new ChainSequence(                        
-                        new ChainAnimator(resultDialog.animator, "ResultDialogShowAnim"),
-                        new ChainAnimator(resultDialog.animator, "ResultDialogHideAnim")
-                    )
-                ).Start();
-            });
+            //testButtons.AddButton("AnimTest", () =>
+            //{
+            //    new ChainRace(
+            //        new ChainButton(skipButton),                    
+            //        new ChainSequence(                        
+            //            new ChainAnimator(resultDialog.animator, "ResultDialogShowAnim"),
+            //            new ChainAnimator(resultDialog.animator, "ResultDialogHideAnim")
+            //        )
+            //    ).Start();
+            //});
+
+            //testButtons.AddButton("All", () =>
+            //{
+            //    resultDialog.UpdatePlayerNumber(5);
+            //    //new ChainSequence(
+            //    //    new ChainRace(
+            //    //        new ChainButton(skipButton),
+            //    //        resultDialog.ChainShowDialog()
+            //    //    ),
+            //    //    new ChainRace(
+            //    //        new ChainButton(skipButton),
+            //    //        resultDialog.ChainHideDialog()
+            //    //    ),
+            //    //    new ChainNop()
+            //    //).Start();
+            //    new ChainSequence(
+            //        new ChainRace(
+            //            new ChainButton(skipButton),
+            //            new ChainSequence(
+            //                resultDialog.ChainShowDialog(),
+            //                resultDialog.ChainHideDialog()
+            //            )
+            //        )
+            //    ).Start();
+            //});
 
             testButtons.AddButton("All", () =>
             {
-                resultDialog.UpdatePlayerNumber(5);
-                //new ChainSequence(
-                //    new ChainRace(
-                //        new ChainButton(skipButton),
-                //        resultDialog.ChainShowDialog()
-                //    ),
-                //    new ChainRace(
-                //        new ChainButton(skipButton),
-                //        resultDialog.ChainHideDialog()
-                //    ),
-                //    new ChainNop()
-                //).Start();
-                new ChainSequence(
-                    new ChainRace(
-                        new ChainButton(skipButton),
-                        new ChainSequence(
-                            resultDialog.ChainShowDialog(),
-                            resultDialog.ChainHideDialog()
-                        )
-                    )
+                resultDialog.SetPlayerInfos(playerInfos);
+                new ChainRace(
+                    new ChainButton(skipButton),
+                    ChainResult()
                 ).Start();
+                //resultDialog.SetPlayerInfos(playerInfos);
+                //resultDialog.ChainRankingPlayers(true).Start();
             });
+
+            testButtons.AddButton("SetPanelInitialPosition", () =>
+            {
+                resultDialog.SetPanelInitialPosition();
+            });
+
 
             skipButton = testButtons.AddButton("Skip");
             skipButton.interactable = false;
@@ -105,8 +124,32 @@ namespace Sample
             });
         }
 
+        /// <summary>
+        /// shows the result dialog with ranking player animation and fade in effect, 
+        /// then hides the dialog with fade out effect. The skip button can be used to skip the animations and effects.
+        /// </summary>
+        public Chain ChainResult()
+        {
+            return new ChainSequence(
+                new ChainAction(() =>
+                {
+                    fadePanel.gameObject.SetActive(true);
+                    fadePanel.SetAlpha(1.0f);                    
+                    resultDialog.SetPanelInitialPosition();
+                }),
+                new ChainDelay(0.5f),
+                new ChainRace(
+                    new ChainButton(skipButton),
+                    new ChainParallel(
+                        fadePanel.ChainFade(false),
+                        new ChainSequence(
+                            new ChainDelay(0.1f),
+                            resultDialog.ChainShowDialog()
+                       )
+                    )
+                )
+            );
+        }
     }
 }
-
-
 

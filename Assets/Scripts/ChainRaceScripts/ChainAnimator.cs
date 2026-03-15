@@ -43,6 +43,7 @@ namespace ChainPattern
                 Complete();
                 return;
             }
+            animator.speed = 1.0f; // Ensure the animator is playing at normal speed
             animator.Play(stateName, layer, 0f);
             animator.Update(0.0f); // Force the state transition to reflect immediately
             cts = new CancellationTokenSource();

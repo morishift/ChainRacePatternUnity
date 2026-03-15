@@ -15,5 +15,16 @@ namespace Sample
         Pong3,
         Pong4
     }
+
+    /// <summary>
+    /// simple class representing player information such as name and score
+    /// </summary>
+    [System.Serializable]
+    public class PlayerInfo
+    {
+        public string name = "";
+        public int score = 0;
+    }
+
 }
 

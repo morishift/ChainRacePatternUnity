@@ -1295,6 +1295,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32bdc3f97d7e6c4983fba9cc422ca4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInfos:
+  - name: Player1
+    score: 1684
+  - name: Player2
+    score: 2379
+  - name: Player3
+    score: 3147
+  - name: Player4
+    score: 4288
+  - name: Player5
+    score: 4912
   testButtons: {fileID: 562792600}
   fadePanel: {fileID: 658507422}
   resultDialog: {fileID: 625989215}
@@ -1388,6 +1399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c22f3e4f8b4834eb052b893ae94b67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textName: {fileID: 793402874}
   textPoint: {fileID: 646005275}
 --- !u!1 &963194225
 GameObject:
