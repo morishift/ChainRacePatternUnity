@@ -55,7 +55,7 @@ namespace ChainPattern
         /// </summary>
         protected override void SkipInternal()
         {
-            Debug.Log($"ChainAnimator:SkipInternal stateName:{stateName}");
+            // Debug.Log($"ChainAnimator:SkipInternal stateName:{stateName}");
             cts?.Cancel();
             // Jump to the last frame when skipped
             if (animator != null)
@@ -70,7 +70,7 @@ namespace ChainPattern
         /// </summary>
         private async UniTask WaitForAnimationAsync(CancellationToken token)
         {
-            Debug.Log($"ChainAnimator:WaitForAnimationAsync1 stateName:{stateName}");
+            // Debug.Log($"ChainAnimator:WaitForAnimationAsync1 stateName:{stateName}");
             try
             {
                 // Phase 1: Wait until the state transition is reflected
@@ -84,13 +84,13 @@ namespace ChainPattern
                 {
                     await UniTask.Yield(PlayerLoopTiming.Update, token);
                 }
-                Debug.Log("ChainAnimator:WaitForAnimationAsync2");
+                // Debug.Log("ChainAnimator:WaitForAnimationAsync2");
                 Complete();
             }
             catch (OperationCanceledException) { }
             finally
             {
-                Debug.Log("ChainAnimator:WaitForAnimationAsync3");
+                // Debug.Log("ChainAnimator:WaitForAnimationAsync3");
                 cts?.Dispose();
                 cts = null;
             }

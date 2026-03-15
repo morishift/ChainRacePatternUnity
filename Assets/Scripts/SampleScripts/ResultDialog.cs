@@ -99,7 +99,7 @@ namespace Sample
             foreach (RankingPlayer r in rankingPlayers)
             {
                 Vector2 position = r.GetComponent<RectTransform>().anchoredPosition;
-                Debug.Log($"{rankingPlayerAnchoredPositions.Count}:({position.x}, {position.y})");
+                // Debug.Log($"{rankingPlayerAnchoredPositions.Count}:({position.x}, {position.y})");
                 rankingPlayerAnchoredPositions.Add(r.GetComponent<RectTransform>().anchoredPosition);
                 // add offset
                 r.GetComponent<RectTransform>().anchoredPosition += rankingPlayerOffset1;
