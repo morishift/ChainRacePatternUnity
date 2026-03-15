@@ -25,12 +25,8 @@ namespace ChainPattern
         ChainState chainState;
         Action onComplete;
 
-        static int construct = 0;
-
         public Chain()
         {
-            ++construct;
-            Debug.Log($"Chain:Constructor Count:{construct}");
             chainState = ChainState.Ready;
         }
 
