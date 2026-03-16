@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace ChainPattern
 {
@@ -35,7 +33,7 @@ namespace ChainPattern
         /// Starts execution
         /// </summary>
         protected override void StartInternal()
-        { 
+        {
             NextChain();
         }
 

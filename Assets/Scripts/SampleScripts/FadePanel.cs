@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using ChainPattern;
 using UnityEngine;
 using UnityEngine.UI;
-using ChainPattern;
 
 namespace Sample
 {
@@ -35,7 +33,7 @@ namespace Sample
                     new ChainAction(() =>
                     {
                         gameObject.SetActive(true);
-                        SetAlpha(0.0f);                        
+                        SetAlpha(0.0f);
                     }),
                     Utility.ChainAlphaAnimation(image, 1.0f, 0.5f)
                 );

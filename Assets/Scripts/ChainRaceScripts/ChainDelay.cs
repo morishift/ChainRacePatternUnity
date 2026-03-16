@@ -2,7 +2,6 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
-using UnityEngine;
 
 namespace ChainPattern
 {
@@ -19,7 +18,7 @@ namespace ChainPattern
         /// </summary>
         public ChainDelay(float seconds)
         {
-            delaySeconds = seconds;            
+            delaySeconds = seconds;
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace ChainPattern
         private async UniTask DelayAsync(CancellationToken token)
         {
             try
-            {                
+            {
                 await UniTask.Delay((int)(delaySeconds * 1000), cancellationToken: token);
                 Complete();
             }

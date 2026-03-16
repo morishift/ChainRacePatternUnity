@@ -1,8 +1,5 @@
 using ChainPattern;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,13 +11,13 @@ namespace Sample
         /// Creates a tween chain that animates RectTransform's anchoredPosition using the specified curve
         /// </summary>
         public static Chain ChainMoveTween(RectTransform rect, Vector2 endPosition, float duration, AnimationCurve curve)
-        {            
+        {
             Vector2 startPosition = Vector2.zero;
             ChainWork work = new ChainWork();
             float startTime = 0.0f;
             duration = Mathf.Max(duration, 0.01f);
             work.onStart += () =>
-            {                
+            {
                 startPosition = rect.anchoredPosition;
                 startTime = Time.time;
             };
@@ -61,7 +58,7 @@ namespace Sample
             duration = Mathf.Max(duration, 0.01f);
             work.onStart += () =>
             {
-                startTime = Time.time;                
+                startTime = Time.time;
             };
             work.onUpdate += () =>
             {
@@ -106,7 +103,7 @@ namespace Sample
         /// Creates a chain that animates alpha of a graphic 
         /// </summary>
         public static Chain ChainAlphaAnimation(Graphic graphic, float alphaEnd, float duration)
-        { 
+        {
             ChainWork work = new ChainWork();
             float alphaStart = 0.0f;
             AnimationCurve curve = null;

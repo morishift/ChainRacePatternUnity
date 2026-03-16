@@ -1,5 +1,3 @@
-
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +13,7 @@ namespace Sample
 
         [SerializeField]
         AudioClip[] audioClips;
-        List<AudioSource> audioSources = new List<AudioSource>();       
+        List<AudioSource> audioSources = new List<AudioSource>();
 
         void Awake()
         {

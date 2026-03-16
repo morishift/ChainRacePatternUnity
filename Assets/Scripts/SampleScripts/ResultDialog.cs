@@ -1,12 +1,7 @@
 using ChainPattern;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 namespace Sample
 {
@@ -134,7 +129,7 @@ namespace Sample
         /// </summary>
         /// <returns></returns>
         public Chain ChainShowBonus()
-        { 
+        {
             ChainParallel parallel = new ChainParallel();
             int index = 0;
             for (int i = 0; i < playerInfos.Length; ++i)
@@ -189,7 +184,7 @@ namespace Sample
                             new ChainSequence(
                                 new ChainDelay(0.4f),
                                 Utility.ChainPlaySound(SoundType.Gao1)
-                            ), 
+                            ),
                             new ChainSequence(
                                 new ChainDelay(0.5f),
                                 rankingPlayer.ChainPointAnimation(score)

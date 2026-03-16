@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using ChainPattern;
-using UnityEngine.Experimental.AI;
+using TMPro;
+using UnityEngine;
 
 namespace Sample
 {
@@ -29,7 +26,7 @@ namespace Sample
         /// set player name to display
         /// </summary>
         public void SetPlayerName(string playerName)
-        { 
+        {
             textName.text = playerName;
         }
 
@@ -37,7 +34,7 @@ namespace Sample
         /// show the bonus animation and update the point text area to end
         /// </summary>        
         public Chain ChainBonus(int totalPointAfterBonus)
-        {            
+        {
             return new ChainParallel(
                 new ChainAnimator(animator, "ResultPlayerAnimBonus"),
                 new ChainSequence(

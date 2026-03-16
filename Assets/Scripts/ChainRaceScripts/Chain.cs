@@ -1,10 +1,6 @@
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System;
 
 namespace ChainPattern
 {
@@ -57,7 +53,7 @@ namespace ChainPattern
             }
             chainState = ChainState.Skipped;
             onComplete = null; // Don't call completion callback when skipped
-            SkipInternal();            
+            SkipInternal();
             currentUtcs?.TrySetResult(true);
         }
 
@@ -85,7 +81,7 @@ namespace ChainPattern
             if (chainState != ChainState.Started)
             {
                 return;
-            }            
+            }
             chainState = ChainState.Completed;
             onComplete?.Invoke();
             onComplete = null;

@@ -1,9 +1,6 @@
-
-using System.Collections;
-using System.Collections.Generic;
+using ChainPattern;
 using UnityEngine;
 using UnityEngine.UI;
-using ChainPattern;
 
 namespace Sample
 {

@@ -1,9 +1,7 @@
-
-using System.Collections;
+using ChainPattern;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using ChainPattern;
 
 namespace Sample
 {
@@ -70,8 +68,8 @@ namespace Sample
                 ),
                 ChainSetButtonsEnabled(true)
             );
-            
-            await chainSequence.Start();            
+
+            await chainSequence.Start();
         }
 
         /// <summary>
@@ -113,7 +111,7 @@ namespace Sample
                 ),
                 ChainSetButtonsEnabled(true)
             );
-            await chainSequence.Start();            
+            await chainSequence.Start();
         }
 
 

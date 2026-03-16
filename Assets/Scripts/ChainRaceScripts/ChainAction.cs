@@ -1,8 +1,5 @@
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace ChainPattern
 {
@@ -14,7 +11,7 @@ namespace ChainPattern
         Action actionToCall;
 
         public ChainAction()
-        {         
+        {
         }
 
         /// <summary>
@@ -29,10 +26,10 @@ namespace ChainPattern
         /// Creates a Chain that executes an action which takes isFastForward as a parameter
         /// </summary>        
         public ChainAction(Action<bool> action)
-        { 
+        {
             actionToCall = () => action?.Invoke(isFastForward);
         }
-        
+
         /// <summary>
         /// Sets the action to be executed
         /// </summary>
@@ -55,7 +52,7 @@ namespace ChainPattern
         /// Called when skipped
         /// </summary>
         protected override void SkipInternal()
-        {            
+        {
             actionToCall = null;
         }
     }
