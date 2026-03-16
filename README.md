@@ -184,8 +184,12 @@ By combining Sequence, Parallel, and Race, complex animation flows and skip cont
 
 ## Installation
 
-1. Copy the scripts in the `ChainPattern` folder into your Unity project
-2. [UniTask](https://github.com/Cysharp/UniTask) is required. Install it beforehand
+### Open this sample project
+Clone or download this repository and open it with Unity.
+Required packages, including UniTask, will be resolved automatically via Unity Package Manager.
+
+### Copy ChainPattern into your own project
+If you copy only the ChainPattern folder into another Unity project, install UniTask in that project beforehand.
 
 ## License
 
