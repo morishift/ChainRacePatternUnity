@@ -57,6 +57,13 @@ namespace ChainPattern
         /// </summary>
         protected override void StartInternal()
         {
+            if (chainList.Count <= 0)
+            {
+                raceState = RaceState.Finished;
+                Complete();
+                return;
+            }
+
             raceState = RaceState.Starting;
             while (chainList.Count > 0 && raceState == RaceState.Starting)
             {

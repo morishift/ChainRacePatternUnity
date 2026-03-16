@@ -57,6 +57,12 @@ namespace ChainPattern
         /// </summary>
         protected override void StartInternal()
         {
+            if (chainList.Count <= 0)
+            {
+                parallelState = ParallelState.Finished;
+                Complete();
+                return;
+            }
             parallelState = ParallelState.Starting;
             while (chainList.Count > 0 && parallelState == ParallelState.Starting)
             {
