@@ -6,7 +6,8 @@ In this repository, the approach of handling skip controls in animation chains a
 
 **[日本語版はこちら (Japanese)](README_ja.md)**
 
-> **Note:** This is not a production-ready library, but rather a reference implementation.  
+> **Note:** ChainRacePattern is currently a proposed design pattern.  
+> This is not a production-ready library, but rather a reference implementation.  
 > It is kept to a minimal set of features, and is intended to be extended and adapted to suit your specific use case and project requirements.
 
 ## Demo
