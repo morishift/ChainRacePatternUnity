@@ -185,8 +185,13 @@ Sequence、Parallel、Raceを組み合わせることで、複雑な演出フロ
 
 ## 導入方法
 
-1. `ChainPattern` フォルダ内のスクリプトをUnityプロジェクトにコピーしてください
-2. [UniTask](https://github.com/Cysharp/UniTask) が必要です。事前にインストールしてください
+### サンプルプロジェクトとして利用する場合
+このリポジトリを clone またはダウンロードし、Unity でプロジェクトを開いてください。  
+UniTask を含む必要なパッケージは、Unity Package Manager により自動的にインストールされます。
+
+### 自分のプロジェクトに組み込む場合
+`ChainPattern` フォルダ内のスクリプトのみを既存の Unity プロジェクトへコピーして利用する場合は、  
+依存ライブラリである UniTask を事前に導入してください。
 
 ## ライセンス
 
