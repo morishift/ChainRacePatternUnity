@@ -27,6 +27,20 @@ Live demos are available in WebGL:
 4. `StartInternal()` and `SkipInternal()` are each called at most once. `Chain` instances are single-use, so do not reuse them; create a new one each time
 5. `isFastForward` is `true` when `Skip()` is guaranteed to be called immediately after start. A `Chain` can check this value at startup to skip unnecessary work (for example, starting animations or allocating resources)
 
+## Design Philosophy
+
+- Skip is treated not as a stop operation, but as a way to consume the remaining flow and move it into a consistent final state
+- Tween / waiting / input / Animator / SFX and similar elements are handled in the same `Chain` unit
+- Skip responsibility is not centralized in outer control logic, but encapsulated inside each `Chain`
+- The whole presentation flow is expressed not as one large procedure, but as a composition of `Sequence`, `Parallel`, and `Race`
+- By expressing processing and animation at an appropriate granularity as `Chain`s, they become easier to reuse
+- If you manage these flows naively with coroutines and flags, temporary state flags and control code tend to grow, and skip handling can easily turn into spaghetti code
+
+## Notes
+
+- Be sure to verify how each `Chain` behaves when `isFastForward` is `true`
+- A `Chain` that intentionally does not implement `SkipInternal()` cannot be skipped, but it can still be useful in cases where skip support is not required
+
 ## Core Classes
 
 ### ChainSequence
