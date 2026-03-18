@@ -193,7 +193,7 @@ Sequence、Parallel、Raceを組み合わせることで、複雑な演出フロ
 | `ChainAction` | 単一のアクションを実行して即完了 |
 | `ChainDelay` | 指定秒数待機 |
 | `ChainAnimator` | Animatorのステート再生を待機 |
-| `ChainWork` | 毎フレーム更新処理を実行（`onStart` / `onUpdate` / `onSkip` イベント） |
+| `ChainWork` | 毎フレーム更新処理を実行（`onStart` / `onUpdate` / `onSkip` イベント） <br>※柔軟ですが、これを多用するのはあまり美しくありません。 |
 | `ChainHalt` | 完了しないChain（外部からのSkipでのみ終了） |
 | `ChainNop` | 何もせず即完了 |
 

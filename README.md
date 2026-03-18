@@ -193,7 +193,7 @@ By combining Sequence, Parallel, and Race, complex animation flows and skip cont
 | `ChainAction` | Executes a single action and completes immediately |
 | `ChainDelay` | Waits for a specified duration |
 | `ChainAnimator` | Waits for an Animator state to finish playing |
-| `ChainWork` | Runs per-frame update logic (`onStart` / `onUpdate` / `onSkip` events) |
+| `ChainWork` | Runs per-frame update logic (`onStart` / `onUpdate` / `onSkip` events) <br>Flexible, but overusing this is not very elegant.|
 | `ChainHalt` | Never completes (only ends via external Skip) |
 | `ChainNop` | Does nothing and completes immediately |
 
