@@ -21,11 +21,11 @@ Live demos are available in WebGL:
 
 `Chain` is the base class representing an animation or procedure. When implementing a custom Chain, follow these rules:
 
-- Implement the startup procedure in `StartInternal()`
-- Call `Complete()` when the procedure finishes
-- `SkipInternal()` may be called after the Chain has started. It must transition to the final state immediately
-- Do not call `Complete()` from inside `SkipInternal()` (it will be ignored)
-- `isFastForward` is `true` when `Skip()` is guaranteed to be called immediately after start. The Chain can check this value at startup to skip unnecessary work (e.g. starting animations or allocating resources)
+1. Implement the startup logic in `StartInternal()`, and call `Complete()` when the logic finishes
+2. `SkipInternal()` may be called after the Chain has started. If called, it must transition to the final state immediately
+3. Do not call `Complete()` from inside `SkipInternal()` (it will be ignored)
+4. `StartInternal()` and `SkipInternal()` are each called at most once. `Chain` instances are single-use, so do not reuse them; create a new one each time
+5. `isFastForward` is `true` when `Skip()` is guaranteed to be called immediately after start. A `Chain` can check this value at startup to skip unnecessary work (for example, starting animations or allocating resources)
 
 ## Core Classes
 
