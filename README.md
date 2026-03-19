@@ -33,7 +33,7 @@ Live demos are available in WebGL:
 - Tween / waiting / input / Animator / SFX and similar elements are handled in the same `Chain` unit
 - Skip responsibility is not centralized in outer control logic, but encapsulated inside each `Chain`
 - The whole presentation flow is expressed not as one large procedure, but as a composition of `Sequence`, `Parallel`, and `Race`
-- By expressing processing and animation at an appropriate granularity as `Chain`s, they become easier to reuse
+- By representing self-contained operations or animations as `Chain`s, they become easier to reuse.
 - If you manage these flows naively with coroutines and flags, temporary state flags and control code tend to grow, and skip handling can easily turn into spaghetti code
 
 ## Notes
@@ -107,7 +107,8 @@ new ChainRace(
 )
 ```
 
-Each Chain implements `SkipInternal()` to handle its own cleanup, so the final state is always correct regardless of when a skip occurs. There is no need to write separate skip logic.
+Each `Chain` implements `SkipInternal()` to move itself to the correct completed state when skipped.  
+As a result, even if a skip occurs, the sequence still reaches the correct final state, without requiring ad-hoc skip handling in the flow logic.
 
 ## Sample Scenes
 
