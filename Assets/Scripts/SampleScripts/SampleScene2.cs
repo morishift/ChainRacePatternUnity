@@ -29,7 +29,12 @@ namespace Sample
         {
             startButton = testButtons.AddButton("Start", async () =>
             {
+                screenButton.interactable = false;
                 resultDialog.SetPlayerInfos(playerInfos);
+                fadePanel.gameObject.SetActive(true);
+                fadePanel.SetAlpha(1.0f);
+                resultDialog.SetPanelInitialPosition();
+
                 Chain chainResult = ChainResult();
                 await new ChainSequence(
                     new ChainAction(() => startButton.interactable = false),
@@ -47,19 +52,9 @@ namespace Sample
         public Chain ChainResult()
         {
             return new ChainSequence(
-                new ChainAction(() =>
-                {
-                    fadePanel.gameObject.SetActive(true);
-                    fadePanel.SetAlpha(1.0f);
-                    resultDialog.SetPanelInitialPosition();
-                }),
                 new ChainDelay(0.5f),
                 new ChainRace(
-                    new ChainSequence(
-                        new ChainDelay(0.1f), // Prevent skipping immediately after the start
-                        new ChainButton(screenButton),
-                        Utility.ChainPlaySound(SoundType.Pong4) // Button press sound effect
-                    ),
+                    new ChainButton(screenButton),
                     new ChainParallel(
                         fadePanel.ChainFade(false),
                         new ChainSequence(
@@ -69,10 +64,7 @@ namespace Sample
                     )
                 ),
                 new ChainRace(
-                    new ChainSequence(
-                        new ChainButton(screenButton),
-                        Utility.ChainPlaySound(SoundType.Pong4)
-                    ),
+                    new ChainButton(screenButton),
                     resultDialog.ChainShowBonus()
                 ),
                 ChainTouchScreen(),
@@ -97,7 +89,6 @@ namespace Sample
                     touchScreen.SetActive(true);
                 }),
                 new ChainButton(screenButton),
-                Utility.ChainPlaySound(SoundType.Pong4),
                 new ChainAction(() =>
                 {
                     touchScreen.SetActive(false);

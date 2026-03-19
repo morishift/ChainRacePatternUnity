@@ -1388,20 +1388,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInfos:
   - name: Player1
-    score: 1684
-    bonus: 30
+    score: 1023
+    bonus: 77
   - name: Player2
-    score: 2379
+    score: 493
     bonus: 0
   - name: Player3
     score: 3147
-    bonus: 50
+    bonus: 53
   - name: Player4
     score: 4288
     bonus: 0
   - name: Player5
     score: 4912
-    bonus: 80
+    bonus: 188
   resultDialog: {fileID: 625989215}
   touchScreen: {fileID: 1165650365}
   screenButton: {fileID: 1680684253}
@@ -2125,6 +2125,7 @@ GameObject:
   - component: {fileID: 1680684255}
   - component: {fileID: 1680684254}
   - component: {fileID: 1680684253}
+  - component: {fileID: 1680684256}
   m_Layer: 5
   m_Name: ScreenButton
   m_TagString: Untagged
@@ -2233,6 +2234,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1680684251}
   m_CullTransparentMesh: 1
+--- !u!114 &1680684256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680684251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 849dcff7d2e858249b19a5762a7fc80d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundType: 1
 --- !u!1 &1783458763
 GameObject:
   m_ObjectHideFlags: 0
