@@ -1,14 +1,13 @@
 # ChainRacePatternUnity
 
-A chain-based animation and async flow control library for Unity.  
-Compose complex animation flows declaratively using Sequence, Parallel, and Race.  
-In this repository, the approach of handling skip controls in animation chains as a **Race** is called the **ChainRacePattern**.
+ChainRacePattern is a design pattern for handling skippable presentation flows in Unity.  
+It represents animations, input, delays, and other presentation steps as Chains, and composes them declaratively with Sequence, Parallel, and Race.
 
 **[日本語版はこちら (Japanese)](README_ja.md)**
 
 > **Note:** ChainRacePattern is currently a proposed design pattern.  
 > This is not a production-ready library, but rather a reference implementation.  
-> It is kept to a minimal set of features, and is intended to be extended and adapted to suit your specific use case and project requirements.
+> It is intentionally kept minimal, and is meant to be extended and adapted to suit your specific use case and project requirements.
 
 ## Demo
 
@@ -16,6 +15,8 @@ Live demos are available in WebGL:
 
 - [Scene1 - Basic Operations](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene1-Base/)
 - [Scene2 - Result Screen](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene2-ResultMock/)
+
+If you want to jump straight to the core idea, start with [Implementing Skip](#implementing-skip).
 
 ## Chain Base Rules
 
@@ -33,7 +34,7 @@ Live demos are available in WebGL:
 - Tween / waiting / input / Animator / SFX and similar elements are handled in the same `Chain` unit
 - Skip responsibility is not centralized in outer control logic, but encapsulated inside each `Chain`
 - The whole presentation flow is expressed not as one large procedure, but as a composition of `Sequence`, `Parallel`, and `Race`
-- By representing self-contained operations or animations as `Chain`s, they become easier to reuse.
+- By representing self-contained operations or animations as `Chain`s, they become easier to reuse
 - If you manage these flows naively with coroutines and flags, temporary state flags and control code tend to grow, and skip handling can easily turn into spaghetti code
 
 ## Notes
@@ -84,13 +85,13 @@ await new ChainRace(
 
 ## Implementing Skip
 
-In games and apps, it's common to let users skip cutscenes and animations by pressing a button.
+In games and apps, it is common to let users skip cutscenes and animations by pressing a button.
 
 A traditional approach requires writing logic to individually stop and finalize each running animation when the skip button is pressed. As animations grow more complex, the skip logic becomes increasingly tangled.
 
-ChainRacePattern solves this problem as follows:
+ChainRacePattern handles this problem as follows:
 
-1. Represent user input as a Chain (e.g. `ChainButton`)
+1. Represent user input as a Chain (for example, `ChainButton`)
 2. Place the animation Chain and `ChainButton` together inside a `ChainRace`
 3. When the button is pressed, `ChainRace` automatically skips the remaining animations
 
@@ -108,7 +109,7 @@ new ChainRace(
 ```
 
 Each `Chain` implements `SkipInternal()` to move itself to the correct completed state when skipped.  
-As a result, even if a skip occurs, the sequence still reaches the correct final state, without requiring ad-hoc skip handling in the flow logic.
+As a result, even if a skip occurs, the sequence still reaches the correct final state, without requiring ad-hoc skip handling in the outer flow logic.
 
 ## Sample Scenes
 
@@ -145,7 +146,7 @@ Section 2 is a plain `ChainSequence` without `ChainRace`. Sections 1 and 3 are s
 
 ```csharp
 new ChainRace(new ChainButton(skipButton), Move 1→2),  // Skippable
-new ChainSequence(Move 2→3),                             // Non-skippable (must watch)
+new ChainSequence(Move 2→3),                           // Non-skippable (must play)
 new ChainRace(new ChainButton(skipButton), Move 3→4),  // Skippable
 ```
 
@@ -155,14 +156,14 @@ A practical sample simulating a game result screen. It combines fade effects, di
 
 The flow is as follows:
 
-1. **Fade out + Show dialog** — `ChainParallel` runs the fade and dialog animation simultaneously. `ChainRace` allows skipping by tapping the screen
+1. **Fade overlay + show dialog** — `ChainParallel` runs the fade and dialog animation simultaneously. `ChainRace` allows skipping by tapping the screen
 2. **Bonus point animation** — Each player's bonus is displayed with staggered timing. Also skippable via `ChainRace`
 3. **Wait for touch** — `ChainButton` waits for a screen tap
-4. **Hide dialog + Fade in** — `ChainParallel` runs the exit animation and fade-in simultaneously
+4. **Hide dialog + restore overlay** — `ChainParallel` runs the exit animation and overlay transition simultaneously
 
 ```csharp
 new ChainSequence(
-    // 1. Fade out + Show dialog (skippable)
+    // 1. Fade overlay + show dialog (skippable)
     new ChainRace(
         new ChainButton(screenButton),
         new ChainParallel(
@@ -177,7 +178,7 @@ new ChainSequence(
     ),
     // 3. Wait for touch
     ChainTouchScreen(),
-    // 4. Hide dialog + Fade in
+    // 4. Hide dialog + restore overlay
     new ChainParallel(
         resultDialog.ChainHideDialog(),
         fadePanel.ChainFade(true)
@@ -194,18 +195,20 @@ By combining Sequence, Parallel, and Race, complex animation flows and skip cont
 | `ChainAction` | Executes a single action and completes immediately |
 | `ChainDelay` | Waits for a specified duration |
 | `ChainAnimator` | Waits for an Animator state to finish playing |
-| `ChainWork` | Runs per-frame update logic (`onStart` / `onUpdate` / `onSkip` events) <br>Flexible, but overusing this is not very elegant.|
+| `ChainWork` | Runs per-frame update logic (`onStart` / `onUpdate` / `onSkip` events) <br>Flexible, but overusing this is not very elegant. |
 | `ChainHalt` | Never completes (only ends via external Skip) |
 | `ChainNop` | Does nothing and completes immediately |
 
 ## Installation
 
 ### Open this sample project
-Clone or download this repository and open it with Unity.
+
+Clone or download this repository and open it with Unity.  
 Required packages, including UniTask, will be resolved automatically via Unity Package Manager.
 
-### Copy ChainPattern into your own project
-If you copy only the ChainPattern folder into another Unity project, install UniTask in that project beforehand.
+### Copy the ChainRacePattern scripts into your own project
+
+If you copy only the ChainRacePattern scripts into another Unity project, install UniTask in that project beforehand.
 
 ## License
 

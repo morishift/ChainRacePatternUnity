@@ -1,12 +1,11 @@
 # ChainRacePatternUnity
 
-Unity向けのチェーンベースのアニメーション制御ライブラリです。  
-Sequence（順次）、Parallel（並列）、Race（競争）の組み合わせで、複雑なアニメーションフローを宣言的に記述できます。  
-また、演出チェーンのスキップ制御を **Race** として扱うアプローチを、本リポジトリでは **ChainRacePattern** と呼んでいます。
+ChainRacePattern は、Unity における演出スキップ問題に対する設計パターンです。  
+演出・入力・待機などを Chain として表現し、Sequence / Parallel / Race の組み合わせで宣言的にフローを記述できます。
 
 **[English version](README.md)**
 
-> **注意:** ChainRacePattern は現時点では提案段階の設計パターンです。  
+> **注意:** ChainRacePattern は現在、提案段階の設計パターンです。  
 > この仕組みは完成品のライブラリではなく、あくまで実装例です。  
 > 必要最低限の構成に留めているため、そのまま利用するのではなく、用途や案件に応じて機能追加・調整したうえで利用することを想定しています。
 
@@ -17,29 +16,31 @@ WebGLで動作するデモを公開しています。
 - [Scene1 - 基本操作](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene1-Base/)
 - [Scene2 - リザルト演出](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene2-ResultMock/)
 
+発想の核だけ先に見たい場合は、[演出スキップの実装](#演出スキップの実装) から読むのがおすすめです。
+
 ## Chainの基本ルール
 
 `Chain` はアニメーションや手続きを表す基底クラスです。独自のChainを実装する場合は、以下のルールに従ってください。
 
-1. `StartInternal()` に開始時の処理を実装し、処理が完了したら `Complete()` を呼び出す
-2. `SkipInternal()` は開始後に呼び出される場合がある。呼び出された場合は、直ちに終了状態へ遷移しなければならない
+1. `StartInternal()` に開始時の手続きを実装し、手続きが完了したら `Complete()` を呼び出す
+2. `SkipInternal()` は開始後に呼び出される場合がある。呼び出された場合は直ちに終了状態に遷移しなければならない
 3. `SkipInternal()` の内部から `Complete()` は呼び出さない（呼び出しても無視される）
-4. `StartInternal()` / `SkipInternal()` は、それぞれ多くても 1 回しか呼び出されない。`Chain` は内部に状態を持つため、使い回さず毎回 `new` して利用する
-5. `isFastForward` は、開始直後に `Skip()` が実行されることが確定している場合に `true` になる。`Chain` は開始時にこの値を参照することで、不要な処理（アニメーション開始やリソース確保など）を省略できる
+4. `StartInternal()` と `SkipInternal()` はそれぞれ最大1回だけ呼ばれる。`Chain` は使い捨てなので再利用せず、毎回新しく生成する
+5. `isFastForward` は、開始直後に `Skip()` が実行されることが確定している場合に `true` になる。Chainは開始時にこの値を参照することで、不要な手続き（アニメーション開始やリソース確保など）を省略できる
 
-## この設計の考え方
+## 設計方針
 
-- スキップは停止ではなく、残りを消費して整合した最終状態へ寄せる操作として扱う
-- Tween / 待機 / 入力 / Animator / SE などを、同じ `Chain` 単位で扱う
-- スキップ時の責務は外側で一括処理せず、各 `Chain` に閉じ込める
-- 演出全体は巨大な手続きではなく、`Sequence` / `Parallel` / `Race` の合成として表現する
-- ひとまとまりの意味を持つ処理やアニメーションを Chain として表現することで、再利用しやすくなる
-- 素朴にコルーチンやフラグで管理すると、暫定フラグや制御用コードが増え、スキップ処理が複雑化しやすい
+- Skipは「止める」処理ではなく、残りのフローを消費して整合した最終状態へ進める処理として扱う
+- Tween / 待機 / 入力 / Animator / SE などを同じ `Chain` 単位で扱う
+- Skip責務は外側の制御ロジックに集中させず、各 `Chain` に閉じ込める
+- 演出全体は巨大な1つの手続きではなく、`Sequence` `Parallel` `Race` の組み合わせとして表現する
+- ひとまとまりの意味を持つ処理やアニメーションを `Chain` として表現することで、再利用しやすくなる
+- コルーチンとフラグで素朴に管理すると、一時的な状態フラグや制御コードが増えやすく、スキップ対応がスパゲッティ化しやすい
 
-## 注意
+## 注意点
 
-- `isFastForward` が `true` のとき、各 `Chain` がどのように振る舞うかを十分確認してください
-- `SkipInternal()` をあえて実装しない `Chain` はスキップできませんが、演出スキップを前提としない用途では利用価値があります
+- `isFastForward` が `true` のときの挙動は、各 `Chain` ごとに必ず確認してください
+- あえて `SkipInternal()` を実装しない `Chain` はスキップできませんが、スキップ対応が不要な箇所ではそれでも有用です
 
 ## 主なクラス
 
@@ -84,11 +85,11 @@ await new ChainRace(
 
 ## 演出スキップの実装
 
-ゲームやアプリの演出では、ユーザーがスキップボタンを押して演出を飛ばせるようにすることがよくあります。
+ゲームやアプリの演出では、ユーザーがボタンを押してカットシーンや演出を飛ばせるようにすることがよくあります。
 
-通常の実装では「スキップボタンが押されたときに、実行中のアニメーションを個別に停止・完了させる手続き」を書く必要があり、アニメーションが複雑になるほどスキップ処理も煩雑になります。
+通常の実装では、「スキップボタンが押されたときに、実行中のアニメーションを個別に停止・完了させる処理」を書く必要があり、演出が複雑になるほどスキップ処理も煩雑になります。
 
-ChainRacePatternでは、この問題を以下のように解決しています。
+ChainRacePattern では、この問題を以下のように扱います。
 
 1. ユーザー入力を `ChainButton` のようなChainとして表現する
 2. `ChainRace` にアニメーションのChainと `ChainButton` を並べて実行する
@@ -107,8 +108,8 @@ new ChainRace(
 )
 ```
 
-各 `Chain` は `SkipInternal()` で、スキップ時に自身を正しい完了状態へ遷移させます。
-そのため、スキップが発生しても演出は正しい最終状態に到達し、演出フロー側で個別のスキップ処理を書く必要はありません。
+各Chainは `SkipInternal()` でスキップ時の終了処理を実装しているため、スキップが発生しても正しい最終状態に遷移します。  
+そのため、外側のフロー制御に場当たり的なスキップ処理を書き散らさずに済みます。
 
 ## サンプルシーンの解説
 
@@ -145,7 +146,7 @@ new ChainRace(new ChainButton(skipButton), 移動3→4),  // 3回目のスキッ
 
 ```csharp
 new ChainRace(new ChainButton(skipButton), 移動1→2),  // スキップ可能
-new ChainSequence(移動2→3),                             // スキップ不可（必ず再生）
+new ChainSequence(移動2→3),                           // スキップ不可（必ず再生）
 new ChainRace(new ChainButton(skipButton), 移動3→4),  // スキップ可能
 ```
 
@@ -155,14 +156,14 @@ new ChainRace(new ChainButton(skipButton), 移動3→4),  // スキップ可能
 
 演出の流れは以下のとおりです。
 
-1. **フェードアウト + ダイアログ表示** — `ChainParallel` でフェードとダイアログ表示を同時に実行。`ChainRace` で画面タップによるスキップにも対応
+1. **オーバーレイのフェード + ダイアログ表示** — `ChainParallel` でフェードとダイアログ表示を同時に実行。`ChainRace` で画面タップによるスキップにも対応
 2. **ボーナスポイント演出** — 各プレイヤーのボーナスを時間差で表示。こちらも `ChainRace` でスキップ可能
 3. **タッチ待ち** — `ChainButton` で画面タップを待機
-4. **ダイアログ非表示 + フェードイン** — `ChainParallel` でダイアログの退場アニメーションとフェードインを同時に実行
+4. **ダイアログ非表示 + オーバーレイ復帰** — `ChainParallel` でダイアログの退場アニメーションとオーバーレイ遷移を同時に実行
 
 ```csharp
 new ChainSequence(
-    // 1. フェードアウト + ダイアログ表示（スキップ可能）
+    // 1. オーバーレイのフェード + ダイアログ表示（スキップ可能）
     new ChainRace(
         new ChainButton(screenButton),
         new ChainParallel(
@@ -177,7 +178,7 @@ new ChainSequence(
     ),
     // 3. タッチ待ち
     ChainTouchScreen(),
-    // 4. ダイアログ非表示 + フェードイン
+    // 4. ダイアログ非表示 + オーバーレイ復帰
     new ChainParallel(
         resultDialog.ChainHideDialog(),
         fadePanel.ChainFade(true)
@@ -185,7 +186,7 @@ new ChainSequence(
 )
 ```
 
-Sequence、Parallel、Raceを組み合わせることで、複雑な演出フローとスキップ制御を宣言的に記述できていることがわかります。
+Sequence、Parallel、Raceを組み合わせることで、複雑な演出フローとスキップ制御を宣言的に記述できます。
 
 ## その他のクラス
 
@@ -194,19 +195,20 @@ Sequence、Parallel、Raceを組み合わせることで、複雑な演出フロ
 | `ChainAction` | 単一のアクションを実行して即完了 |
 | `ChainDelay` | 指定秒数待機 |
 | `ChainAnimator` | Animatorのステート再生を待機 |
-| `ChainWork` | 毎フレーム更新処理を実行（`onStart` / `onUpdate` / `onSkip` イベント） <br>※柔軟ですが、これを多用するのはあまり美しくありません。 |
+| `ChainWork` | 毎フレーム更新処理を実行（`onStart` / `onUpdate` / `onSkip` イベント）<br>柔軟ですが、多用するとあまり美しくありません。 |
 | `ChainHalt` | 完了しないChain（外部からのSkipでのみ終了） |
 | `ChainNop` | 何もせず即完了 |
 
 ## 導入方法
 
-### サンプルプロジェクトとして利用する場合
-このリポジトリを clone またはダウンロードし、Unity でプロジェクトを開いてください。  
-UniTask を含む必要なパッケージは、Unity Package Manager により自動的にインストールされます。
+### このサンプルプロジェクトをそのまま開く
 
-### 自分のプロジェクトに組み込む場合
-`ChainPattern` フォルダ内のスクリプトのみを既存の Unity プロジェクトへコピーして利用する場合は、  
-依存ライブラリである UniTask を事前に導入してください。
+このリポジトリを clone またはダウンロードして Unity で開いてください。  
+UniTask を含む必要なパッケージは、Unity Package Manager により自動で解決されます。
+
+### ChainRacePattern のスクリプトだけを自分のプロジェクトへ持ち込む
+
+ChainRacePattern のスクリプトだけを別の Unity プロジェクトへコピーする場合は、事前にそのプロジェクトへ UniTask を導入してください。
 
 ## ライセンス
 
