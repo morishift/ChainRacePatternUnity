@@ -1,0 +1,16 @@
+{
+    "name": "ChainPattern.Samples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a1b2c3d4e5f67890a1b2c3d4e5f67890"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
