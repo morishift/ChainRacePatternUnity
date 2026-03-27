@@ -30,12 +30,13 @@ If you want to jump straight to the core idea, start with [Implementing Skip](#i
 
 ## Design Philosophy
 
-- Skip is treated not as a stop operation, but as a way to consume the remaining flow and move it into a consistent final state
-- Tween / waiting / input / Animator / SFX and similar elements are handled in the same `Chain` unit
-- Skip responsibility is not centralized in outer control logic, but encapsulated inside each `Chain`
-- The whole presentation flow is expressed not as one large procedure, but as a composition of `Sequence`, `Parallel`, and `Race`
+- Skip is treated not as stopping execution, but as consuming the remaining flow and moving it into a consistent final state
+- Elements such as tweens, delays, input, Animator actions, and sound effects are handled uniformly as `Chain`s
+- Responsibility for skip behavior is not centralized in outer control logic, but encapsulated within each `Chain`
+- The overall presentation flow is expressed not as one large procedure, but as a composition of `Sequence`, `Parallel`, and `Race`
 - By representing self-contained operations or animations as `Chain`s, they become easier to reuse
-- If you manage these flows naively with coroutines and flags, temporary state flags and control code tend to grow, and skip handling can easily turn into spaghetti code
+- If these flows are managed naively with coroutines and flags, temporary state flags and control code tend to accumulate, and skip handling can easily turn into spaghetti code
+- Exceptions thrown inside a `Chain` are the responsibility of the user to handle; the framework does not catch, recover from, or continue execution after them
 
 ## Notes
 
