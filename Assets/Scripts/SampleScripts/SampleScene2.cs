@@ -27,6 +27,7 @@ namespace Sample
 
         void Start()
         {
+            touchScreen.SetActive(false);
             startButton = testButtons.AddButton("Start", async () =>
             {
                 screenButton.interactable = false;
@@ -34,15 +35,12 @@ namespace Sample
                 fadePanel.gameObject.SetActive(true);
                 fadePanel.SetAlpha(1.0f);
                 resultDialog.SetPanelInitialPosition();
-
-                Chain chainResult = ChainResult();
-                await new ChainSequence(
-                    new ChainAction(() => startButton.interactable = false),
-                    chainResult,
-                    new ChainAction(() => startButton.interactable = true)
-                ).Start();
-            });
-            touchScreen.SetActive(false);
+                startButton.interactable = false;
+                Debug.Log("START");
+                await ChainResult().Start();
+                Debug.Log("END");
+                startButton.interactable = true;
+            });            
         }
 
         /// <summary>
