@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Kenichi Morishita
+
 namespace ChainPattern
 {
     /// <summary>

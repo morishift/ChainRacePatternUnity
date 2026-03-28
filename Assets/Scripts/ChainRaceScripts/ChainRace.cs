@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Kenichi Morishita
+
 using System.Collections.Generic;
 
 namespace ChainPattern

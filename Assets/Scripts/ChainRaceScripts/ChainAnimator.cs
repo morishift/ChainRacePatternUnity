@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Kenichi Morishita
+
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
