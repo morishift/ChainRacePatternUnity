@@ -13,8 +13,11 @@ ChainRacePattern は、Unity における演出スキップ問題に対する設
 
 WebGLで動作するデモを公開しています。
 
-- [Scene1 - 基本操作](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene1-Base/)
-- [Scene2 - リザルト演出](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene2-ResultMock/)
+- [Scene1 - 基本操作](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene1-Base/)  
+<img src="https://github.com/user-attachments/assets/b22f074c-74b5-49b0-a035-1fad09d267be" width="400" alt="Scene1-Simple"><br>  
+
+- [Scene2 - リザルト演出](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene2-ResultMock/)  
+<img src="https://github.com/user-attachments/assets/2c69a4d4-7ae7-46ec-ab46-9da0d1142285" width="400" alt="Scene2-ResultScreenMockup"><br>     
 
 発想の核だけ先に見たい場合は、[演出スキップの実装](#演出スキップの実装) から読むのがおすすめです。
 

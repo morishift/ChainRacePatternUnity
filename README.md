@@ -13,8 +13,11 @@ It represents animations, input, delays, and other presentation steps as Chains,
 
 Live demos are available in WebGL:
 
-- [Scene1 - Basic Operations](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene1-Base/)
-- [Scene2 - Result Screen](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene2-ResultMock/)
+- [Scene1 - Basic Operations](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene1-Base/)  
+<img src="https://github.com/user-attachments/assets/b22f074c-74b5-49b0-a035-1fad09d267be" width="400" alt="Scene1-Simple"><br>  
+
+- [Scene2 - Result Screen](https://morishift.github.io/ChainRacePatternUnity-Demo/Scene2-ResultMock/)  
+<img src="https://github.com/user-attachments/assets/2c69a4d4-7ae7-46ec-ab46-9da0d1142285" width="400" alt="Scene2-ResultScreenMockup"><br>     
 
 If you want to jump straight to the core idea, start with [Implementing Skip](#implementing-skip).
 
