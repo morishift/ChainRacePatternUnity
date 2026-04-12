@@ -217,7 +217,7 @@ ChainRacePattern のスクリプトだけを別の Unity プロジェクトへ�
 ### UniTask を使わずに導入する
 
 UniTask はこの実装例で非同期処理を扱うために使っています。  
-ChainRacePattern 自体は UniTask 専用の考え方ではないため、コルーチンや Unity 標準の C# async/await で実装することも可能です。  
+ChainRacePattern 自体は UniTask 専用の考え方ではないため、Unity 標準の C# async/await などで実装することも可能です。
 
 ## ライセンス
 
