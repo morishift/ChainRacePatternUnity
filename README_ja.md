@@ -214,6 +214,11 @@ UniTask を含む必要なパッケージは、Unity Package Manager により�
 
 ChainRacePattern のスクリプトだけを別の Unity プロジェクトへコピーする場合は、事前にそのプロジェクトへ UniTask を導入してください。
 
+### UniTask を使わずに導入する
+
+UniTask はこの実装例で非同期処理を扱うために使っています。  
+ChainRacePattern 自体は UniTask 専用の考え方ではないため、コルーチンや Unity 標準の C# async/await で実装することも可能です。  
+
 ## ライセンス
 
 [MIT License](LICENSE)

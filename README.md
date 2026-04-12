@@ -214,6 +214,11 @@ Required packages, including UniTask, will be resolved automatically via Unity P
 
 If you copy only the ChainRacePattern scripts into another Unity project, install UniTask in that project beforehand.
 
+### Using without UniTask
+
+UniTask is used in this reference implementation for async/await support.  
+ChainRacePattern itself is not tied to UniTask, so it can also be implemented using coroutines or Unity's built-in C# async/await.  
+
 ## License
 
 [MIT License](LICENSE)
