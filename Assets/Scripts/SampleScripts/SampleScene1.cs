@@ -69,6 +69,10 @@ namespace Sample
                 ChainSetButtonsEnabled(true)
             );
 
+#if UNITY_EDITOR
+            // Register the Chain with the debug window to visualize its state and tree structure at runtime
+            ChainPattern.Editor.ChainDebugWindow.Watch(chainSequence);
+#endif
             await chainSequence.Start();
         }
 
@@ -111,6 +115,11 @@ namespace Sample
                 ),
                 ChainSetButtonsEnabled(true)
             );
+
+#if UNITY_EDITOR
+            // Register the Chain with the debug window to visualize its state and tree structure at runtime
+            ChainPattern.Editor.ChainDebugWindow.Watch(chainSequence);
+#endif
             await chainSequence.Start();
         }
 
@@ -153,6 +162,10 @@ namespace Sample
                 ),
                 ChainSetButtonsEnabled(true)
             );
+#if UNITY_EDITOR
+            // Register the Chain with the debug window to visualize its state and tree structure at runtime
+            ChainPattern.Editor.ChainDebugWindow.Watch(chainSequence);
+#endif
             await chainSequence.Start();
         }
 

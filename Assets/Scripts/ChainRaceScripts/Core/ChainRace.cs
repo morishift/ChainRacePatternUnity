@@ -23,17 +23,31 @@ namespace ChainPattern
         }
         RaceState raceState;
 
+#if UNITY_EDITOR
+        // Full list of all registered children, preserved in definition order for the debug view.
+        // Unlike chainList/startedChainList, entries are never removed even after the race ends.
+        List<Chain> debugChainList = new List<Chain>();
+#endif
+
         public ChainRace(params Chain[] chains)
         {
             raceState = RaceState.Ready;
             chainList.AddRange(chains);
+#if UNITY_EDITOR
+            debugChainList.AddRange(chains);
+#endif
         }
 
         /// <summary>
-        /// Adds a chain to the race
+        /// Adds a chain to the race.
+        /// If already Started, the chain begins immediately.
+        /// Chains added after the race has finished are ignored.
         /// </summary>
         public ChainRace Add(Chain chain)
         {
+#if UNITY_EDITOR
+            debugChainList.Add(chain);
+#endif
             if (raceState == RaceState.Finished)
             {
                 // Ignore
@@ -133,5 +147,13 @@ namespace ChainPattern
                 }
             }
         }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Returns all registered children in definition order for the debug tree view.
+        /// Includes chains regardless of their current state (Ready/Started/Completed/Skipped).
+        /// </summary>
+        public override Chain[] DebugChildren => debugChainList.ToArray();
+#endif
     }
 }

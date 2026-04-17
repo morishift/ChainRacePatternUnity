@@ -23,17 +23,31 @@ namespace ChainPattern
         }
         ParallelState parallelState;
 
+#if UNITY_EDITOR
+        // Full list of all registered children, preserved in definition order for the debug view.
+        // Unlike chainList/startedChainList, entries are never removed even after completion.
+        List<Chain> debugChainList = new List<Chain>();
+#endif
+
         public ChainParallel(params Chain[] chains)
         {
             parallelState = ParallelState.Ready;
             chainList.AddRange(chains);
+#if UNITY_EDITOR
+            debugChainList.AddRange(chains);
+#endif
         }
 
         /// <summary>
-        /// Adds a chain to the parallel execution
-        /// </summary>        
+        /// Adds a chain to the parallel execution.
+        /// If already Started, the chain begins immediately.
+        /// Chains added after the parallel has finished are ignored.
+        /// </summary>
         public ChainParallel Add(Chain chain)
         {
+#if UNITY_EDITOR
+            debugChainList.Add(chain);
+#endif
             if (parallelState == ParallelState.Finished)
             {
                 // Ignore
@@ -133,5 +147,13 @@ namespace ChainPattern
                 }
             }
         }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Returns all registered children in definition order for the debug tree view.
+        /// Includes chains regardless of their current state (Ready/Started/Completed/Skipped).
+        /// </summary>
+        public override Chain[] DebugChildren => debugChainList.ToArray();
+#endif
     }
 }
