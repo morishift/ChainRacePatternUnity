@@ -205,7 +205,7 @@ Sequence、Parallel、Raceを組み合わせることで、複雑な演出フロ
 
 ## ChainDebugWindow
 
-<img src="https://github.com/user-attachments/assets/f4fb337f-c6e7-45b1-b28c-ccc3e477108f" width="600" alt="Scene1-ChainDebug"><br>     
+![Scene1-ChainDebug](https://github.com/user-attachments/assets/f4fb337f-c6e7-45b1-b28c-ccc3e477108f)
 
 `ChainDebugWindow` は、プレイ中にChainツリーの状態をリアルタイムで可視化するエディタウィンドウです。
 
