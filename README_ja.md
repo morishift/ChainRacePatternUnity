@@ -203,15 +203,16 @@ Sequence、Parallel、Raceを組み合わせることで、複雑な演出フロ
 | `ChainHalt` | 完了しないChain（外部からのSkipでのみ終了） |
 | `ChainNop` | 何もせず即完了 |
 
+
 ## ChainDebugWindow
 
 ![Scene1-ChainDebug.gif](https://github.com/user-attachments/assets/99b7b38e-6067-40ae-8f56-50deea97ad68)  
 
-`ChainDebugWindow` は、プレイ中にChainツリーの状態をリアルタイムで可視化するエディタウィンドウです。
+`ChainDebugWindow` は、プレイ中の **Chainツリー全体の状態** をリアルタイムで可視化するエディタウィンドウです。
 
-**Window > Chain Debug** から開きます。
+**Window > Chain Debug** から開けます。
 
-使用するには、ゲームコードから `ChainDebugWindow.Watch(chain)` を呼び出して、監視するルートChainを登録します。
+使用するには、ゲームコードから `ChainDebugWindow.Watch(chain)` を呼び出して、**監視対象となるルートChain** を登録します。
 
 ```csharp
 void StartChain()
@@ -220,18 +221,22 @@ void StartChain()
     ChainDebugWindow.Watch(chain);
     chain.Start();
 }
-```
+````
 
 各Chainの状態は色で表示されます。
 
-| 色 | 状態 | 説明 |
-|---|---|---|
-| グレー | Ready | 未開始 |
-| 緑 | Started | 実行中 |
-| 黄 | Skipped | スキップで完了 |
-| 青 | Completed | 正常に完了 |
+| 色   | 状態        | 説明         |
+| --- | --------- | ---------- |
+| グレー | Ready     | 未開始        |
+| 緑   | Started   | 実行中        |
+| 黄   | Skipped   | スキップによって終了 |
+| 青   | Completed | 正常に完了      |
 
-各Chainのそばには経過時間が表示され、FastForwardモードで開始されたChainには `[FF]` が表示されます。
+各Chainの右側には経過時間が表示されます。
+また、**開始直後にスキップされることが確定している状態** で開始されたChainには **`[FF]`** が表示されます。
+
+右上には、監視中のChain総数と、状態ごとの件数も表示されます。
+
 
 ## 導入方法
 

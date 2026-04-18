@@ -205,13 +205,13 @@ By combining Sequence, Parallel, and Race, complex animation flows and skip cont
 
 ## ChainDebugWindow
 
-<img src="https://github.com/user-attachments/assets/f4fb337f-c6e7-45b1-b28c-ccc3e477108f" width="400" alt="Scene1-ChainDebug"><br>     
+![Scene1-ChainDebug.gif](https://github.com/user-attachments/assets/99b7b38e-6067-40ae-8f56-50deea97ad68)  
 
-`ChainDebugWindow` is an Editor window that visualizes the state of a Chain tree in real time during Play Mode.
+`ChainDebugWindow` is an Editor window that visualizes the **state of the entire Chain tree** in real time during play mode.
 
-Open it via **Window > Chain Debug**.
+You can open it from **Window > Chain Debug**.
 
-To use it, call `ChainDebugWindow.Watch(chain)` from your game code to register the root Chain to observe:
+To use it, call `ChainDebugWindow.Watch(chain)` from your game code to register the **root Chain** to monitor.
 
 ```csharp
 void StartChain()
@@ -222,16 +222,19 @@ void StartChain()
 }
 ```
 
-Each Chain is displayed with a color-coded state:
+The state of each Chain is shown by color.
 
-| Color | State | Description |
-|---|---|---|
-| Gray | Ready | Not yet started |
-| Green | Started | Currently running |
-| Yellow | Skipped | Completed via skip |
-| Blue | Completed | Completed normally |
+| Color  | State     | Description       |
+| ------ | --------- | ----------------- |
+| Gray   | Ready     | Not started yet   |
+| Green  | Started   | Currently running |
+| Yellow | Skipped   | Finished by skip  |
+| Blue   | Completed | Finished normally |
 
-Elapsed time is shown next to each Chain. Chains that started in fast-forward mode are marked with `[FF]`.
+The elapsed time is displayed on the right side of each Chain.
+In addition, Chains that were started in a state where skipping was **guaranteed immediately after start** are marked with **`[FF]`**.
+
+The top right also shows the total number of monitored Chains and the count for each state.
 
 ## Installation
 
