@@ -203,6 +203,36 @@ By combining Sequence, Parallel, and Race, complex animation flows and skip cont
 | `ChainHalt` | Never completes (only ends via external Skip) |
 | `ChainNop` | Does nothing and completes immediately |
 
+## ChainDebugWindow
+
+<img src="https://github.com/user-attachments/assets/f4fb337f-c6e7-45b1-b28c-ccc3e477108f" width="400" alt="Scene1-ChainDebug"><br>     
+
+`ChainDebugWindow` is an Editor window that visualizes the state of a Chain tree in real time during Play Mode.
+
+Open it via **Window > Chain Debug**.
+
+To use it, call `ChainDebugWindow.Watch(chain)` from your game code to register the root Chain to observe:
+
+```csharp
+void StartChain()
+{
+    var chain = new ChainSequence(/* ... */);
+    ChainDebugWindow.Watch(chain);
+    chain.Start();
+}
+```
+
+Each Chain is displayed with a color-coded state:
+
+| Color | State | Description |
+|---|---|---|
+| Gray | Ready | Not yet started |
+| Green | Started | Currently running |
+| Yellow | Skipped | Completed via skip |
+| Blue | Completed | Completed normally |
+
+Elapsed time is shown next to each Chain. Chains that started in fast-forward mode are marked with `[FF]`.
+
 ## Installation
 
 ### Open this sample project
