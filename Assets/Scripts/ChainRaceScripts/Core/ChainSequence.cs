@@ -14,20 +14,33 @@ namespace ChainPattern
         Chain currentChain;
         bool isEnabled;
 
+#if UNITY_EDITOR
+        // Full list of all registered children, preserved in definition order for the debug view.
+        // Unlike chainList, entries are never removed from this list even after execution.
+        List<Chain> debugChainList = new List<Chain>();
+#endif
+
         public ChainSequence(params Chain[] chains)
         {
             isEnabled = true;
             chainList.AddRange(chains);
+#if UNITY_EDITOR
+            debugChainList.AddRange(chains);
+#endif
         }
 
         /// <summary>
-        /// Adds a chain to the sequence
-        /// </summary>        
+        /// Adds a chain to the sequence.
+        /// Chains added after the sequence has finished are ignored.
+        /// </summary>
         public ChainSequence Add(Chain chain)
         {
             if (isEnabled)
             {
                 chainList.Add(chain);
+#if UNITY_EDITOR
+                debugChainList.Add(chain);
+#endif
             }
             return this;
         }
@@ -45,8 +58,11 @@ namespace ChainPattern
         /// </summary>
         protected override void SkipInternal()
         {
-            currentChain?.Skip();
-            currentChain = null;
+            if (currentChain != null)
+            {
+                currentChain.Skip();
+                currentChain = null;
+            }
             while (chainList.Count > 0)
             {
                 Chain c = chainList[0];
@@ -84,6 +100,14 @@ namespace ChainPattern
             });
             currentChain.Start();
         }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Returns all registered children in definition order for the debug tree view.
+        /// Includes chains regardless of their current state (Ready/Started/Completed/Skipped).
+        /// </summary>
+        public override Chain[] DebugChildren => debugChainList.ToArray();
+#endif
     }
 }
 

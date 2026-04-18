@@ -37,7 +37,11 @@ namespace Sample
                 resultDialog.SetPanelInitialPosition();
                 startButton.interactable = false;
                 Debug.Log("START");
-                await ChainResult().Start();
+                Chain chain = ChainResult();
+#if UNITY_EDITOR
+                ChainPattern.Editor.ChainDebugWindow.Watch(chain);
+#endif  
+                await chain.Start();
                 Debug.Log("END");
                 startButton.interactable = true;
             });            
